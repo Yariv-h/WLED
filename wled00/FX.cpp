@@ -4249,12 +4249,31 @@ uint16_t WS2812FX::mode_freqpixel(void) {                  // Freqpixel. By Andr
 //  ** BINMAP     //
 ////////////////////
 
-// Map bins 7 through 490 to the ENTIRE SEGLEN.
-// For some reason, it seems to be mirroring itself. I really don't know why.
+// Map the 16 fftResult bins to the entire segment. I tried all 470, but that didn't work out so well, did it precious.
 uint16_t WS2812FX::mode_binmap(void) {    // Binmap. Scale bins to SEGLEN. By Andrew Tuline
 
 #ifndef ESP8266
 
+  extern double fftResult[];
+
+  double maxVal = 0;
+
+  for (int i = 0; i < 16; i++) {            // apleshu's quickie method to to get the max volume.
+    if (fftResult[i] > maxVal) {
+      maxVal = fftResult[i];                // These values aren't normalized though.
+    }
+  }
+
+  if (maxVal == 0) maxVal = 255;                        // If maxVal is too low, we'll have a mapping issue.
+  if (maxVal > (256-SEGMENT.intensity)*10) maxVal = (256-SEGMENT.intensity)*10;         // That maxVal may be >2550, so let's cap it.
+
+  for (int i=0; i<SEGLEN; i++) {
+    uint8_t binNum = i * 16 / SEGLEN;
+    uint8_t bright = mapf(fftResult[binNum], 0, maxVal, 0, 255);   // find the brightness in relation to max
+    setPixelColor(i, color_blend(SEGCOLOR(1), color_from_palette(millis()/100+i*4, false, PALETTE_SOLID_WRAP, 0), bright));   // colour is just an index in the palette. The FFT is the intensity.
+  }
+
+/*
   extern double fftBin[];                   // raw FFT data. He uses bins 7 through 470, so we'll limit to around there.
   extern double fftResult[];
   #define samples 480                       // Don't use the highest bins.
@@ -4283,6 +4302,7 @@ uint16_t WS2812FX::mode_binmap(void) {    // Binmap. Scale bins to SEGLEN. By An
     uint8_t bright = mapf(sumBin, 0, maxVal, 0, 255);   // find the brightness in relation to max
   setPixelColor(i, color_blend(SEGCOLOR(1), color_from_palette(i*4, false, PALETTE_SOLID_WRAP, 0), bright));   // colour is just an index in the palette. The FFT is the intensity.
   }
+*/
 
 #else
   fade_out(224);
@@ -5060,19 +5080,19 @@ byte fftSwpieLoop = 0;
 byte singleColorMode = 0;
 byte BLOCK_SIZE = 20;
 uint16_t WS2812FX::mode_fft_swiping() {
-  
+
 int color = 192;
  fract8 chanceOfGlitter = sampleAvg;
  Serial.print("runnning chanceOfGlitter"); Serial.println(chanceOfGlitter);
 
  if( random8() < chanceOfGlitter-SEGMENT.speed) {
-   
+
 
     EVERY_N_MILLIS(5000) {
        singleColorMode++;
        singleColorMode=singleColorMode%5;
       }
-      
+
     switch(singleColorMode) {
           case 0:
             if(fftSwpieLoop >= SEGLEN-BLOCK_SIZE) {
@@ -5090,19 +5110,19 @@ int color = 192;
             fftSwpieLoop-=BLOCK_SIZE;
             break;
 
-          case 2: 
+          case 2:
             fftSwpieLoop+=BLOCK_SIZE;
             fftSwpieLoop=fftSwpieLoop%SEGLEN;
             break;
 
           case 3:
-            
+
             if(fftSwpieLoop-BLOCK_SIZE < 0) {
               fftSwpieLoop= SEGLEN-BLOCK_SIZE;
             }
             fftSwpieLoop-=BLOCK_SIZE;
             break;
-             
+
           case 4:
             if(fftSwpieLoop-BLOCK_SIZE < 0 && fftSwpieLoop-20> -20) {
               fftSwpieLoop=BLOCK_SIZE;
@@ -5116,23 +5136,23 @@ int color = 192;
 
 
     for(int i = fftSwpieLoop; i < fftSwpieLoop+BLOCK_SIZE; i++) {
-       
-     
-        int sat = constrain(fftResult[i%16]+120,0,250);      
-        int bri = constrain(fftResult[i%16]+50,0,250);      
-        int col = constrain(fftResult[i%16]+187,0,250); 
+
+
+        int sat = constrain(fftResult[i%16]+120,0,250);
+        int bri = constrain(fftResult[i%16]+50,0,250);
+        int col = constrain(fftResult[i%16]+187,0,250);
         col = 192;
 
 
-        
+
          if(sat<255 && sat >0 && bri<255 && bri >0 && col<255 && col >0){
-           
+
            CRGB newcolor = ColorFromPalette(currentPalette, sat, bri, LINEARBLEND);
            CRGB fastled_col = col_to_crgb(getPixelColor(i));
 
             nblend(fastled_col, newcolor, 128);
             setPixelColor(i, fastled_col.red, fastled_col.green, fastled_col.blue);
-           
+
           // CRGB newcolor = CHSV(col, sat, bri);
           // setPixelColor(i, crgb_to_col(newcolor));
          } else {
@@ -5140,7 +5160,7 @@ int color = 192;
            setPixelColor(i, crgb_to_col(newcolor));
          }
     }
-     
+
    } else {
     fade_out(-0.8);
    }
