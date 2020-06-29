@@ -5057,9 +5057,9 @@ uint16_t WS2812FX::mode_ablank1(void) {
 } // mode_ablank1()
 
 
-//////////////////////////////
-//  FFT test  by Yariv-H    //
-//////////////////////////////
+////////////////////////////////
+//  ** FFT test  by Yariv-H   //
+////////////////////////////////
 
 uint16_t WS2812FX::fft_test() {
   double temp[16];
