@@ -3946,7 +3946,6 @@ uint32_t ledData[MAX_LEDS];                 // See const.h for a value of 1500.
 uint32_t dataStore[4096];										// we are declaring a storage area or 64 x 64 (4096) words.
 
 
-
 double mapf(double x, double in_min, double in_max, double out_min, double out_max){
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
@@ -4212,7 +4211,7 @@ uint16_t WS2812FX::mode_waterfall(void) {                  // Waterfall. By: And
 
 #ifndef ESP8266
   setPixelColor(SEGLEN-1, color_blend(SEGCOLOR(1), color_from_palette(pixCol+SEGMENT.intensity, false, PALETTE_SOLID_WRAP, 0), (int)FFT_Magnitude>>8));
-    
+
 #else
   setPixelColor(SEGLEN-1, color_blend(SEGCOLOR(1), color_from_palette(millis(), false, PALETTE_SOLID_WRAP, 0), pixCol));
 #endif // ESP8266
@@ -4367,11 +4366,11 @@ uint16_t WS2812FX::mode_noisemove(void) {          // Noisemove.    By: Andrew T
 
   for (int i=0; i<6; i++) {     // DO NOT make this > 5 because we only have 16 FFTresult bins.
     uint16_t locn = inoise16(millis()*SEGMENT.speed+i*50000, millis()*SEGMENT.speed);           // Get a new pixel location from moving noise.
-    
+
     locn = map(locn,7500,58000,0,SEGLEN-1);                                 // Map that to the length of the strand, and ensure we don't go over.
     locn = locn % (SEGLEN - 1);                                             // Just to be bloody sure.
-    
-    setPixelColor(locn, color_blend(SEGCOLOR(1), color_from_palette(i*64, false, PALETTE_SOLID_WRAP, 0), fftResult[i*3]*8)); 
+
+    setPixelColor(locn, color_blend(SEGCOLOR(1), color_from_palette(i*64, false, PALETTE_SOLID_WRAP, 0), fftResult[i*3]*8));
   }
 
 #else
