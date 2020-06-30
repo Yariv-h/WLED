@@ -3927,6 +3927,9 @@ uint16_t WS2812FX::mode_ripplepeak(void) {                    // * Ripple peak. 
 
 
 
+
+
+
 ///////////////////////////////
 //     BEGIN FFT ROUTINES    //
 ///////////////////////////////
@@ -4172,6 +4175,8 @@ uint16_t WS2812FX::mode_spectral(void) {        // Spectral. By Andreas Pleschut
       }
     }
   }
+
+
 
 #else
   fade_out(224);
