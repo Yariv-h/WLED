@@ -5045,7 +5045,7 @@ uint16_t WS2812FX::fft_test() {
       int val = constrain(temp[i],0,254);
       Serial.print(val); Serial.print(" ");
       if(val<255 && val >0){
-        CRGB newcolor = CHSV(192, 220, val);
+        CRGB newcolor = CHSV(192, 220, (int) val);
         setPixelColor(i, crgb_to_col(newcolor));
       } else {
         CRGB newcolor = CHSV(192, 220, 0);
@@ -5053,4 +5053,99 @@ uint16_t WS2812FX::fft_test() {
       }
     }
     Serial.println(" ");
+    return FRAMETIME;
 } //
+
+byte fftSwpieLoop = 0;
+byte singleColorMode = 0;
+byte BLOCK_SIZE = 20;
+uint16_t WS2812FX::mode_fft_swiping() {
+  
+int color = 192;
+ fract8 chanceOfGlitter = sampleAvg;
+ Serial.print("runnning chanceOfGlitter"); Serial.println(chanceOfGlitter);
+
+ if( random8() < chanceOfGlitter-SEGMENT.speed) {
+   
+
+    EVERY_N_MILLIS(5000) {
+       singleColorMode++;
+       singleColorMode=singleColorMode%5;
+      }
+      
+    switch(singleColorMode) {
+          case 0:
+            if(fftSwpieLoop >= SEGLEN-BLOCK_SIZE) {
+                 fftSwpieLoop-=BLOCK_SIZE;
+                 singleColorMode=1;
+            }
+            fftSwpieLoop+=BLOCK_SIZE;
+            break;
+
+          case 1:
+           if(fftSwpieLoop-BLOCK_SIZE < 0) {
+                fftSwpieLoop+=BLOCK_SIZE;
+                singleColorMode=0;
+            }
+            fftSwpieLoop-=BLOCK_SIZE;
+            break;
+
+          case 2: 
+            fftSwpieLoop+=BLOCK_SIZE;
+            fftSwpieLoop=fftSwpieLoop%SEGLEN;
+            break;
+
+          case 3:
+            
+            if(fftSwpieLoop-BLOCK_SIZE < 0) {
+              fftSwpieLoop= SEGLEN-BLOCK_SIZE;
+            }
+            fftSwpieLoop-=BLOCK_SIZE;
+            break;
+             
+          case 4:
+            if(fftSwpieLoop-BLOCK_SIZE < 0 && fftSwpieLoop-20> -20) {
+              fftSwpieLoop=BLOCK_SIZE;
+            }
+            else if(fftSwpieLoop-BLOCK_SIZE < 0) {
+              fftSwpieLoop= SEGLEN-BLOCK_SIZE-1; // TODO - fix this - not reaching 0...
+            }
+            fftSwpieLoop-=BLOCK_SIZE;
+            break;
+    }
+
+
+    for(int i = fftSwpieLoop; i < fftSwpieLoop+BLOCK_SIZE; i++) {
+       
+     
+        int sat = constrain(fftResult[i%16]+120,0,250);      
+        int bri = constrain(fftResult[i%16]+50,0,250);      
+        int col = constrain(fftResult[i%16]+187,0,250); 
+        col = 192;
+
+
+        
+         if(sat<255 && sat >0 && bri<255 && bri >0 && col<255 && col >0){
+           
+           CRGB newcolor = ColorFromPalette(currentPalette, sat, bri, LINEARBLEND);
+           CRGB fastled_col = col_to_crgb(getPixelColor(i));
+
+            nblend(fastled_col, newcolor, 128);
+            setPixelColor(i, fastled_col.red, fastled_col.green, fastled_col.blue);
+           
+          // CRGB newcolor = CHSV(col, sat, bri);
+          // setPixelColor(i, crgb_to_col(newcolor));
+         } else {
+           CRGB newcolor = CHSV(col, 0, 0);
+           setPixelColor(i, crgb_to_col(newcolor));
+         }
+    }
+     
+   } else {
+    fade_out(-0.8);
+   }
+
+  //return FRAMETIME;
+  return 30+sampleAvg/2;
+
+}
