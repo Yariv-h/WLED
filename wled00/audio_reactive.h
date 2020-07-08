@@ -304,8 +304,8 @@ void logAudio() {
     Serial.print(0); Serial.print(" ");
     Serial.println(" ");
   #ifndef ESP8266                                   // if we are on a ESP32
-    Serial.print("running on core ");               // identify core
-    Serial.println(xPortGetCoreID());
+   // Serial.print("running on core ");               // identify core
+   // Serial.println(xPortGetCoreID());
   #endif
 #endif
 

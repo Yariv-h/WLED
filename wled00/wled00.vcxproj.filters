@@ -266,6 +266,9 @@
     <ClCompile Include="FX_fcn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FX_FFT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\dependencies\blynk\Blynk\utility.cpp">
       <Filter>Source Files\Dependencies</Filter>
     </ClCompile>

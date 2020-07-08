@@ -222,6 +222,7 @@
     <ClCompile Include="src\dependencies\time\Time.cpp" />
     <ClCompile Include="FX.cpp" />
     <ClCompile Include="FX_fcn.cpp" />
+    <ClCompile Include="FX_FFT.cpp" />
     <ClCompile Include="usermod.cpp" />
     <ClCompile Include="wled.cpp" />
     <ClCompile Include="wled_eeprom.cpp" />

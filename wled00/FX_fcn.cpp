@@ -150,7 +150,6 @@ void WS2812FX::setPixelColor(uint16_t i, byte r, byte g, byte b, byte w)
   
   uint16_t skip = _skipFirstMode ? LED_SKIP_AMOUNT : 0;
   if (SEGLEN) {//from segment
-
     //color_blend(getpixel, col, SEGMENT.opacity); (pseudocode for future blending of segments)
     if (IS_SEGMENT_ON)
     {

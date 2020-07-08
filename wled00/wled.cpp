@@ -140,6 +140,7 @@ void WLED::setup()
 #endif
   Serial.begin(115200);
   Serial.setTimeout(50);
+  randomSeed(analogRead(0));
   DEBUG_PRINTLN();
   DEBUG_PRINT("---WLED ");
   DEBUG_PRINT(versionString);
