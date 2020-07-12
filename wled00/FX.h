@@ -32,7 +32,6 @@
 
 
 
-
 #define FASTLED_INTERNAL //remove annoying pragma messages
 #include "FastLED.h"
 
@@ -247,11 +246,8 @@
 #define FX_MODE_2DDNA                  137
 #define FX_MODE_2DMATRIX               138
 #define FX_MODE_2DMEATBALLS            139
-#define FX_MODE_ABLANK0                140
-#define FX_MODE_ABLANK1                141
-#define FX_FFT_TEST                    142
-#define FX_MODE_SWIPING                143
-
+#define FX_FFT_TEST                    140
+#define FX_MODE_SWIPING                141
 
 // Sound reactive external variables
 extern int sample;
@@ -492,8 +488,6 @@ class WS2812FX {
       _mode[FX_MODE_2DDNA]                   = &WS2812FX::mode_2Ddna;
       _mode[FX_MODE_2DMATRIX]                = &WS2812FX::mode_2Dmatrix;
       _mode[FX_MODE_2DMEATBALLS]             = &WS2812FX::mode_2Dmeatballs;
-      _mode[FX_MODE_ABLANK0]                 = &WS2812FX::mode_ablank0;
-      _mode[FX_MODE_ABLANK1]                 = &WS2812FX::mode_ablank1;
       _mode[FX_FFT_TEST]                     = &WS2812FX::fft_test;
       _mode[FX_MODE_SWIPING]                 = &WS2812FX::mode_fft_swiping;
 
@@ -736,8 +730,6 @@ class WS2812FX {
       mode_2Ddna(void),
       mode_2Dmatrix(void),
       mode_2Dmeatballs(void),
-      mode_ablank0(void),
-      mode_ablank1(void),
       fft_test(void),
       mode_fft_swiping(void);
                   
@@ -815,11 +807,6 @@ class WS2812FX {
     uint16_t realPixelIndex(uint16_t i);
 };
 
-
-
-
-
-
 //10 names per line
 const char JSON_mode_names[] PROGMEM = R"=====([
 "Solid","Blink","Breathe","Wipe","Wipe Random","Random Colors","Sweep","Dynamic","Colorloop","Rainbow",
@@ -836,7 +823,7 @@ const char JSON_mode_names[] PROGMEM = R"=====([
 "Flow","Chunchun","* Pixels","* Pixelwave","* Juggles","* Matripix","* Gravimeter","* Plasmoid","* Puddles","* Midnoise",
 "* Noisemeter","** Freqwave","** Freqmatrix","** Spectral","* Waterfall","** Freqpixel","** Binmap","** Noisepeak","* Noisefire","* Puddlepeak",
 "** Noisemove","2D Plasma","Perlin Move","* Ripple Peak","2D FireNoise","2D Squared Swirl","2D Fire2012","2D DNA","2D Matrix","2D Meatballs",
-"A Blank0","A Blank1","FFT_TEST","Swiping FFT"
+"** FFT_TEST", "** Swiping FFT"
 ])=====";
 
 
