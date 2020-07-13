@@ -4055,42 +4055,6 @@ uint16_t WS2812FX::mode_binmap(void) {    // Binmap. Scale bins to SEGLEN. By An
 } // mode_binmap()
 
 
-////////////////////////////////
-//  ** FFT test  by Yariv-H   //
-////////////////////////////////
-
-uint16_t WS2812FX::fft_test() {
-
-#ifndef ESP8266
-/*  double temp[16];
-  memcpy(temp, fftResult, sizeof(fftResult[0])*16);
-  for(int i = 0; i < 16; i++) {
-      int val = constrain(temp[i],0,254);
-      Serial.print(val); Serial.print(" ");
-      if(val<255 && val >0){
-        CRGB newcolor = CHSV(192, 220, val);
-        setPixelColor(i, crgb_to_col(newcolor));
-      } else {
-        CRGB newcolor = CHSV(192, 220, 0);
-        setPixelColor(i, crgb_to_col(newcolor));
-      }
-    }
-    Serial.println(" ");
-*/
- for(int i = 0; i < 16; i++) {
-    Serial.print(fftResult[i]); Serial.print(" ");
-  }
-    Serial.println(" ");
-
-
-#else
-  fade_out(224);
-#endif // ESP8266
-
-  return FRAMETIME;
-} //
-
-
 ///////////////////////
 //  ** Freqmatrix    //
 ///////////////////////

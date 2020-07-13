@@ -248,6 +248,8 @@
 #define FX_MODE_2DMEATBALLS            139
 #define FX_FFT_TEST                    140
 #define FX_MODE_SWIPING                141
+#define FX_MODE_FFT_WALL               142
+
 
 // Sound reactive external variables
 extern int sample;
@@ -490,7 +492,7 @@ class WS2812FX {
       _mode[FX_MODE_2DMEATBALLS]             = &WS2812FX::mode_2Dmeatballs;
       _mode[FX_FFT_TEST]                     = &WS2812FX::fft_test;
       _mode[FX_MODE_SWIPING]                 = &WS2812FX::mode_fft_swiping;
-
+      _mode[FX_MODE_FFT_WALL]                = &WS2812FX::mode_fft_wall;
       _brightness = DEFAULT_BRIGHTNESS;
       currentPalette = CRGBPalette16(CRGB::Black);
       targetPalette = CloudColors_p;
@@ -731,7 +733,11 @@ class WS2812FX {
       mode_2Dmatrix(void),
       mode_2Dmeatballs(void),
       fft_test(void),
-      mode_fft_swiping(void);
+      mode_fft_swiping(void),
+      mode_fft_wall(void);
+
+      bool pixelToSkip(int pixel);
+      void addGlitterPro(fract8 chanceOfGlitter, int color, int sat, int bright);
                   
   private:
     NeoPixelWrapper *bus;
@@ -823,7 +829,7 @@ const char JSON_mode_names[] PROGMEM = R"=====([
 "Flow","Chunchun","* Pixels","* Pixelwave","* Juggles","* Matripix","* Gravimeter","* Plasmoid","* Puddles","* Midnoise",
 "* Noisemeter","** Freqwave","** Freqmatrix","** Spectral","* Waterfall","** Freqpixel","** Binmap","** Noisepeak","* Noisefire","* Puddlepeak",
 "** Noisemove","2D Plasma","Perlin Move","* Ripple Peak","2D FireNoise","2D Squared Swirl","2D Fire2012","2D DNA","2D Matrix","2D Meatballs",
-"** FFT_TEST", "** Swiping FFT"
+"** FFT_TEST", "** Swiping FFT", "** FFT Wall"
 ])=====";
 
 
