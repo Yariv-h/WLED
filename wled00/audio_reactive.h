@@ -7,7 +7,7 @@
 
 #include "wled.h"
 
-//#define FFT_SAMPLING_LOG
+#define FFT_SAMPLING_LOG
 //#define MIC_SAMPLING_LOG
 
 #ifndef ESP8266
@@ -217,6 +217,7 @@ void agcAvg() {                                                       // A simpl
       for(int i=0; i<samples; i++) {
         micData = analogRead(MIC_PIN);                        // Analog Read
         rawMicData = micData >> 2;                            // ESP32 has 12 bit ADC
+      
         vReal[i] = micData;                                   // Store Mic Data in an array
         vImag[i] = 0;
 
@@ -230,6 +231,8 @@ void agcAvg() {                                                       // A simpl
           }
         microseconds += sampling_period_us;
       }
+      Serial.println("Data:");
+  
 
   //  beat = beatFilter(envelope);
   //  if (beat > 50000) digitalWrite(LED_BUILTIN, HIGH); else digitalWrite(LED_BUILTIN, LOW);
@@ -242,8 +245,8 @@ void agcAvg() {                                                       // A simpl
        * vReal[8 .. 511] contain useful data, each a 20Hz interval (140Hz - 10220Hz).
        * There could be interesting data at [2 .. 7] but chances are there are too many artifacts
        */
-      FFT.MajorPeak(&FFT_MajorPeak, &FFT_Magnitude);        // let the effects know which freq was most dominant
-      FFT.DCRemoval();
+     /// FFT.MajorPeak(&FFT_MajorPeak, &FFT_Magnitude);        // let the effects know which freq was most dominant
+      //FFT.DCRemoval();
 
       for (int i = 0; i < samples; i++) fftBin[i] = vReal[i];   // export FFT field
 
@@ -373,20 +376,12 @@ void FFTTunedcode( void * parameter) {
         microseconds += sampling_period_us;
       }
 
-  //  beat = beatFilter(envelope);
-  //  if (beat > 50000) digitalWrite(LED_BUILTIN, HIGH); else digitalWrite(LED_BUILTIN, LOW);
-
-      FFT.Windowing( FFT_WIN_TYP_HAMMING, FFT_FORWARD );    // Weigh data
-      FFT.Compute( FFT_FORWARD );                           // Compute FFT
-      FFT.ComplexToMagnitude();                             // Compute magnitudes
-
-      /*
-       * vReal[8 .. 511] contain useful data, each a 20Hz interval (140Hz - 10220Hz).
-       * There could be interesting data at [2 .. 7] but chances are there are too many artifacts
-       */
-      FFT.MajorPeak(&FFT_MajorPeak, &FFT_Magnitude);        // let the effects know which freq was most dominant
-      FFT.DCRemoval();
-
+  
+  FFT.Windowing(vReal, samples, FFT_WIN_TYP_HAMMING, FFT_FORWARD);	/* Weigh data */
+  FFT.Compute(vReal, vImag, samples, FFT_FORWARD); /* Compute FFT */
+  FFT.ComplexToMagnitude(vReal, vImag, samples); /* Compute magnitudes */
+    //double x = FFT.MajorPeak(vReal, samples, samplingFrequency);
+  //Serial.println(x, 6);
       for (int i = 0; i < samples; i++) fftBin[i] = vReal[i];   // export FFT field
 
       /*
@@ -419,8 +414,9 @@ void FFTTunedcode( void * parameter) {
       //recordPinkNoiseAvg();
 
       for(int i=0; i< 16; i++) {
-          if(fftResult[i]-pinknoiseRecorded[i] < 0 ) {fftResult[i]=0;} else {fftResult[i]-=pinknoiseRecorded[i];}
-          fftResult[i] = constrain(map(fftResult[i], 0,  maxChannelFFTRecorded[i], 0, 254),0,254);
+         // if(fftResult[i]-pinknoiseRecorded[i] < 0 ) {fftResult[i]=0;} else {fftResult[i]-=pinknoiseRecorded[i];}
+          //fftResult[i] = constrain(map(fftResult[i], 0,  maxChannelFFTRecorded[i], 0, 254),0,254);
+          fftResult[i] = constrain(map(fftResult[i], 0,  maxChannel[i], 0, 254),0,254);
           if(fftResult[i]<0) fftResult[i]=0;
       }
   }

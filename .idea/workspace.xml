@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="dbb9db06-ceae-49ec-91c8-3dd5dc4bddcc" name="Default" comment="adding fft effect">
+      <change beforePath="$PROJECT_DIR$/platformio.ini" beforeDir="false" afterPath="$PROJECT_DIR$/platformio.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wled00/audio_reactive.h" beforeDir="false" afterPath="$PROJECT_DIR$/wled00/audio_reactive.h" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="audio_reactive.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wled00/audio_reactive.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="229">
+              <caret line="268" column="45" lean-forward="true" selection-start-line="268" selection-start-column="45" selection-end-line="268" selection-end-column="45" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="platformio.ini" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/platformio.ini">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FX.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wled00/FX.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="800" column="40" selection-start-line="800" selection-start-column="40" selection-end-line="800" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="palettes.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wled00/palettes.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="14195">
+              <caret line="835" column="49" selection-start-line="835" selection-start-column="49" selection-end-line="835" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="REBASE" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="fft_effects" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/wled00/FX.h" />
+        <option value="$PROJECT_DIR$/platformio.ini" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-9" />
+    <option name="width" value="978" />
+    <option name="height" value="1039" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="WLED" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WLED" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WLED" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WLED" type="462c0819:PsiDirectoryNode" />
+              <item name="wled00" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+  </component>
+  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
+    <UpdatedFiles>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Updated from server" />
+        <option name="myStatusName" value="Changed on server" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="CHANGED_ON_SERVER" />
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated" />
+          <option name="myStatusName" value="Changed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.gitignore</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/CHANGELOG.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/package-lock.json</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/package.json</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/platformio.ini</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/tools/cdata.js</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/FX.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/FX.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/FX_fcn.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/NpbWrapper.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/alexa.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/audio_reactive.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/const.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/data/index.htm</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/data/settings_sec.htm</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/data/settings_sync.htm</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/data/settings_time.htm</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/data/settings_ui.htm</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/data/settings_wifi.htm</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/data/update.htm</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/fcn_declare.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/html_other.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/html_settings.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/html_ui.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/ir.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/ir_codes.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/json.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/led.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/mqtt.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/set.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/udp.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/usermod.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/wled.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/wled.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/wled_eeprom.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/wled_serial.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/wled_server.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/xml.cpp</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Created" />
+          <option name="myStatusName" value="Created" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CREATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.github/ISSUE_TEMPLATE/bug.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.github/ISSUE_TEMPLATE/feature_request.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.github/ISSUE_TEMPLATE/question.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/CODE_OF_CONDUCT.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/macbook-pro-space-gray-on-the-wooden-table.jpg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/walking-with-iphone-x.jpg</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/images/wled_logo.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/EXAMPLE_v2/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/EXAMPLE_v2/usermod_v2_example.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/Fix_unreachable_netservices_v2/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/Fix_unreachable_netservices_v2/usermod_Fix_unreachable_netservices.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/Fix_unreachable_webserver/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/Fix_unreachable_webserver/usermod.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/PIR_sensor_switch/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/PIR_sensor_switch/usermod_PIR_sensor_switch.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/TTGO-T-Display/README.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/TTGO-T-Display/assets/ttgo_hardware1.png</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/TTGO-T-Display/platformio_override.ini</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/TTGO-T-Display/usermod.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/Temperature/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/Temperature/usermod_temperature.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/Temperature/usermods_list.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/mpu6050_imu/readme.md</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/mpu6050_imu/usermod_mpu6050_imu.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/usermods/rotary_encoder_change_brightness/usermode_rotary_set.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/um_manager.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/usermod_v2_empty.h</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/usermods_list.cpp</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled00/ws.cpp</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Deleted" />
+          <option name="myStatusName" value="Deleted" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="true" />
+          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.cproject</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.project</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/.vs/wled00/v15/.suo</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/platformio.ini.VS</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/wled_logo.png</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Restored" />
+          <option name="myStatusName" value="Will be restored" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="RESTORED" />
+        </FILE-GROUP>
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Modified" />
+        <option name="myStatusName" value="Modified" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MODIFIED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Skipped" />
+        <option name="myStatusName" value="Skipped" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SKIPPED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with conflicts" />
+        <option name="myStatusName" value="Will be merged with conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_CONFLICTS" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with tree conflicts" />
+        <option name="myStatusName" value="Merged with tree conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with property conflicts" />
+        <option name="myStatusName" value="Will be merged with property conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged" />
+        <option name="myStatusName" value="Will be merged" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Not in repository" />
+        <option name="myStatusName" value="Not in repository" />
+        <option name="mySupportsDeletion" value="true" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="UNKNOWN" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally added" />
+        <option name="myStatusName" value="Locally added" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_ADDED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally removed" />
+        <option name="myStatusName" value="Locally removed" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_REMOVED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Switched" />
+        <option name="myStatusName" value="Switched" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SWITCHED" />
+      </FILE-GROUP>
+    </UpdatedFiles>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <properties />
+      <listeners />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dbb9db06-ceae-49ec-91c8-3dd5dc4bddcc" name="Default" comment="adding fft effect" />
+      <created>1593348530745</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1593348530745</updated>
+      <workItem from="1593348532473" duration="9135000" />
+      <workItem from="1594824849766" duration="720000" />
+    </task>
+    <task id="LOCAL-00001" summary="- Recording noise &amp; pink noise &amp; max value&#10;- Setting FFTResults to have the average band val&#10;- Removing noise from FFTResults&#10;- Creating test effect which copy the FFT value to prevent read write race cond&#10;- Light 16 leds with FFT val as brightness&#10;&#10;- TODO: Effect is not working from the effect selection screen, but can be used in other working effect methods for testing">
+      <created>1593348889272</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1593348889272</updated>
+    </task>
+    <task id="LOCAL-00002" summary="- Missing /">
+      <created>1593366242563</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1593366242563</updated>
+    </task>
+    <task id="LOCAL-00003" summary="adding more pallets">
+      <created>1593447351128</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1593447351128</updated>
+    </task>
+    <task id="LOCAL-00004" summary="adding fft effect">
+      <created>1594653983687</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1594653983687</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="732000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <editor active="true" />
+    <layout>
+      <window_info anchor="right" id="PlantUML" order="3" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info id="Image Layers" order="2" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.46707818" side_tool="true" visible="true" weight="0.14637482" />
+      <window_info anchor="right" id="Maven Projects" order="3" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.5329218" weight="0.2511737" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info id="Capture Tool" order="2" />
+      <window_info id="Designer" order="2" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15364583" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info id="UI Designer" order="2" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="7" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/wled00/audio_reactive.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4454">
+          <caret line="262" selection-start-line="262" selection-end-line="262" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wled00/palettes.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14195">
+          <caret line="835" column="49" selection-start-line="835" selection-start-column="49" selection-end-line="835" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wled00/FX.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13668">
+          <caret line="804" column="40" selection-start-line="804" selection-start-column="40" selection-end-line="804" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wled00/palettes.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14195">
+          <caret line="835" column="49" selection-start-line="835" selection-start-column="49" selection-end-line="835" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wled00/FX.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="800" column="40" selection-start-line="800" selection-start-column="40" selection-end-line="800" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wled00/audio_reactive.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="268" column="45" lean-forward="true" selection-start-line="268" selection-start-column="45" selection-end-line="268" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/platformio.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
