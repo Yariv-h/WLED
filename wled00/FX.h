@@ -102,7 +102,7 @@
 #define IS_REVERSE      ((SEGMENT.options & REVERSE     ) == REVERSE     )
 #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
-#define MODE_COUNT                     141
+#define MODE_COUNT                     142
 
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
@@ -245,6 +245,7 @@
 #define FX_MODE_2DMATRIX               138
 #define FX_MODE_2DMEATBALLS            139
 #define FX_FFT_TEST                    140
+#define FX_FFT_WALL                    141
 
 
 // Sound reactive external variables
@@ -272,6 +273,7 @@ class WS2812FX {
       uint8_t fft1;
       uint8_t fft2;
       uint8_t fft3;
+      double fftScale;
       uint8_t palette;
       uint8_t mode;
       uint8_t options; //bit pattern: msb first: transitional needspixelstate tbd tbd (paused) on reverse selected
@@ -487,6 +489,7 @@ class WS2812FX {
       _mode[FX_MODE_2DMATRIX]                = &WS2812FX::mode_2Dmatrix;
       _mode[FX_MODE_2DMEATBALLS]             = &WS2812FX::mode_2Dmeatballs;
       _mode[FX_FFT_TEST]                     = &WS2812FX::fft_test;
+      _mode[FX_FFT_WALL]                     = &WS2812FX::mode_fft_wall;
 
       _brightness = DEFAULT_BRIGHTNESS;
       currentPalette = CRGBPalette16(CRGB::Black);
@@ -727,7 +730,10 @@ class WS2812FX {
       mode_2Ddna(void),
       mode_2Dmatrix(void),
       mode_2Dmeatballs(void),
+      mode_fft_wall(void),
       fft_test(void);
+      bool pixelToSkip(int pixel);
+      void addGlitterPro(fract8 chanceOfGlitter, int color, int sat, int bright);
 
   private:
     NeoPixelWrapper *bus;
@@ -817,7 +823,7 @@ const char JSON_mode_names[] PROGMEM = R"=====([
 "Noise Pal","Sine","* Pixels","* Pixelwave","* Juggles","* Matripix","* Gravimeter","* Plasmoid","* Puddles","* Midnoise",
 "* Noisemeter","** Freqwave","** Freqmatrix","** Spectral","* Waterfall","** Freqpixel","** Binmap","** Noisepeak","* Noisefire","* Puddlepeak",
 "** Noisemove","2D Plasma","Perlin Move","* Ripple Peak","2D FireNoise","2D Squared Swirl","2D Fire2012","2D DNA","2D Matrix","2D Meatballs",
-"** FFT_TEST"
+"** FFT_TEST","** FFT_WALL"
 ])=====";
 
 

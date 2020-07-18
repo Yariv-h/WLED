@@ -25,8 +25,9 @@ void userSetup()
 
 // Define the FFT Task and lock it to core 0
 xTaskCreatePinnedToCore(
-      FFTcode,                          // Function to implement the task
+      //FFTcode,                          // Function to implement the task
       //FFTTunedcode,                          // Function to implement the task
+      logarithmicFFT,
       "FFT",                            // Name of the task
       10000,                            // Stack size in words
       NULL,                             // Task input parameter
@@ -50,7 +51,10 @@ void userLoop() {
       getSample();                                              // Sample the microphone
       agcAvg();                                                 // Calculated the PI adjusted value as sampleAvg
       myVals[millis()%32] = sampleAgc;
+      removeLogarithmicNoise();
       logAudio();
+      
+      
     }
     #ifndef ESP8266
     if (audioSyncEnabled & (1 << 0)) {

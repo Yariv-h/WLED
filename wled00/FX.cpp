@@ -3931,6 +3931,7 @@ extern double FFT_MajorPeak;
 extern double FFT_Magnitude;
 extern double fftBin[];                     // raw FFT data
 extern double fftResult[];                  // summary of bins array. 16 summary bins.
+extern double fftResultLogarithmicNoiseless[];
 extern double beat;
 extern uint16_t lastSample;
 double volume = 1;
@@ -4988,3 +4989,52 @@ uint16_t WS2812FX::mode_2Dmeatballs(void) {   // Metaballs by Stefan Petrick. Ca
 
   return FRAMETIME;
 } // mode_2Dmeatballs()
+
+
+uint16_t WS2812FX::mode_fft_wall() {
+   
+    double scaleVal = SEGMENT.fft3 /100;
+    for(int i=0; i<16; i++) {
+      fftResultLogarithmicNoiseless[i]*=scaleVal;
+    }
+
+    for(int i=0; i<SEGLEN; i++) {
+        int val = constrain(fftResultLogarithmicNoiseless[i%16], 0, 254);
+        int sat = constrain(fftResultLogarithmicNoiseless[i%16]+120,0,250);
+        int bri = constrain(fftResultLogarithmicNoiseless[i%16],0,250);
+        int col = 192;
+        if(pixelToSkip(i)) continue;
+
+        CRGB newcolor = CHSV(col, sat, bri);
+        setPixelColor(i, crgb_to_col(newcolor));
+     }
+
+     if(sampleAvg>150) {
+         addGlitterPro(sampleAvg, 192, 0, 254);
+         addGlitterPro(sampleAvg, 192, 0, sampleAvg);
+     }
+
+     if(sampleAvg> 70) {
+         addGlitterPro(sampleAvg, 50, 250, 250);
+         addGlitterPro(sampleAvg, 50, 250, sampleAvg);
+       }
+   
+    
+    fade_out(SEGMENT.intensity);
+    return FRAMETIME + SEGMENT.speed;
+ }
+
+ void WS2812FX::addGlitterPro(fract8 chanceOfGlitter, int color, int sat, int bright) { // Let's add some glitter, thanks to Mark
+  if( random8() < chanceOfGlitter) {
+    CRGB newcolor = CHSV(color,sat, bright); 
+    setPixelColor(random16(SEGLEN), crgb_to_col(newcolor));
+  }
+}
+
+ bool WS2812FX::pixelToSkip(int pixel)  {
+     if(pixel >=0 && pixel <20) return true;
+     if(pixel >=110 && pixel <=148) return true;
+     if(pixel >=230 && pixel <=250) return true;
+
+     return false;
+ } //mode_fft_wall

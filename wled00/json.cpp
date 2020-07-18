@@ -77,6 +77,7 @@ void deserializeSegment(JsonObject elem, byte it)
       seg.fft1 = elem["f1x"] | seg.fft1;
       seg.fft2 = elem["f2x"] | seg.fft2;
       seg.fft3 = elem["f3x"] | seg.fft3;
+      seg.fftScale = elem["fscale"] | seg.fftScale;
       seg.palette = elem["pal"] | seg.palette;
     }
   }

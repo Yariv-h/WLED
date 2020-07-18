@@ -7,7 +7,8 @@
 
 #include "wled.h"
 
-#define FFT_SAMPLING_LOG
+//#define FFT_SAMPLING_LOG
+//#define FFT_LOG_NOISELESS_SAMPLING_LOG
 //#define MIC_SAMPLING_LOG
 
 #ifndef ESP8266
@@ -54,6 +55,8 @@ uint16_t lastSample;                                // last audio noise sample
 
 uint8_t myVals[32];                                 // Used to store a pile of samples as WLED frame rate and WLED sample rate are not synchronized
 double fftResultMax[16] = {0.0};
+
+
 #define max(a,b) ((a)>(b)?(a):(b))
 
 struct audioSyncPacket {
@@ -182,14 +185,13 @@ void agcAvg() {                                                       // A simpl
   double vImag[samples];
   double fftBin[samples];
   double fftResult[16];
+  double fftResultLogarithmicNoiseless[16];
 
   // Andrew would like to know which microphone/configuration was used to calculate these values.
   // Would be nice to support individual calibrations, but would need an easy procedure everyone can use to do so, i.e. a sound meter/generator for Android/iPhone.
   int noise[] = {1233,	1327,	1131,	1008,	1059,	996,	981,	973,	967,	983,	957,	957,	955,	957,	960,	976}; //ESP32 noise - run on quite evn, record FFTResults - by Yariv-H
-  int pinknoise[] = {7922,	6427,	3448,	1645,	1535,	2116,	2729,	1710,	2174,	2262,	2039,	2604,	2848,	2768,	2343,	2188}; //ESP32 pink noise - by Yariv-H
   int maxChannel[] = {73873/2,	82224/2,	84988/2,	52898/2,	51754/2,	51221/2,	38814/2,	31443/2,	29154/2, 26204/2,	23953/2,	23022/2,	16982/2,	19399/2,	14790/2,	15612/2}; //playing sin wave 0-20khz pick the max value for each channel - by Yariv-H
-  int maxChannelFFTRecorded[] = {186943, 181730, 152546, 140679, 110148, 92237, 77182, 61950, 48802, 43885, 32588, 26312, 23612, 17868, 18343, 12092}; //playing sin wave 0-20khz pick the max value for each channel - by Yariv-H
-  int pinknoiseRecorded[] = {78269, 83542, 47214, 24001, 14830, 9050, 7238, 5247, 4240, 2866, 2689, 3336, 2338, 2876, 2003, 4786}; //ESP32 pink noise - by Yariv-H
+  int logarithmicNoise[16] = {120, 117, 110, 107, 105,  112,  98,  102, 112,  106, 103, 99,  99,  102, 103, 102 };
 
   // Create FFT object
   arduinoFFT FFT = arduinoFFT( vReal, vImag, samples, samplingFrequency );
@@ -353,7 +355,7 @@ void FFTTunedcode( void * parameter) {
     double beatSample = 0;
     double envelope = 0;
     uint16_t rawMicData = 0;
-
+    
     for(;;) {
       delay(1);           // DO NOT DELETE THIS LINE! It is needed to give the IDLE(0) task enough time and to keep the watchdog happy.
       microseconds = micros();
@@ -407,22 +409,79 @@ void FFTTunedcode( void * parameter) {
       fftResult[13] = (fftAdd(111, 147)) /37;
       fftResult[14] = (fftAdd(147, 194)) /48;
       fftResult[15] = (fftAdd(194, 255)) /62;
-      
-      
-      
+            
       //recordFFTMaxValue();
       //recordPinkNoiseAvg();
-
-      for(int i=0; i< 16; i++) {
-         // if(fftResult[i]-pinknoiseRecorded[i] < 0 ) {fftResult[i]=0;} else {fftResult[i]-=pinknoiseRecorded[i];}
-          //fftResult[i] = constrain(map(fftResult[i], 0,  maxChannelFFTRecorded[i], 0, 254),0,254);
-          fftResult[i] = constrain(map(fftResult[i], 0,  maxChannel[i], 0, 254),0,254);
-          if(fftResult[i]<0) fftResult[i]=0;
-      }
   }
 }
 
+void logarithmicFFT( void * parameter) {
+  uint16_t rawMicData = 0;
+    
+    for(;;) {
+      delay(1);           // DO NOT DELETE THIS LINE! It is needed to give the IDLE(0) task enough time and to keep the watchdog happy.
+      microseconds = micros();
 
+      for(int i=0; i<samples; i++) {
+        micData = analogRead(MIC_PIN);                        // Analog Read
+        rawMicData = micData >> 2;                            // ESP32 has 12 bit ADC
+        vReal[i] = micData;                                   // Store Mic Data in an array
+        vImag[i] = 0;
+
+        while(micros() - microseconds < sampling_period_us){
+          //empty loop
+          }
+        microseconds += sampling_period_us;
+      }
+
+  
+  FFT.Windowing(vReal, samples, FFT_WIN_TYP_HAMMING, FFT_FORWARD);	/* Weigh data */
+  FFT.Compute(vReal, vImag, samples, FFT_FORWARD); /* Compute FFT */
+  FFT.ComplexToMagnitude(vReal, vImag, samples); /* Compute magnitudes */
+  //double x = FFT.MajorPeak(vReal, samples, samplingFrequency);
+  //Serial.println(x, 6);
+  
+      for (int i = 0; i < samples; i++) {
+        double t = 0.0;
+        t = abs(vReal[i]);
+        t = 16*log(t);
+        fftBin[i] = t;
+      }
+
+      /*
+       * Create an array of 16 bins which roughly represent values the human ear
+       * can determine as different frequency bands (fftBins[0..6] are already zero'd)
+
+       *
+      * set in each bin the average band value - by Yariv-H
+      */
+      fftResult[0] = (fftAdd(3,4)) /2;
+      fftResult[1] = (fftAdd(4,5)) /2;
+      fftResult[2] = (fftAdd(5,7)) /3;
+      fftResult[3] = (fftAdd(7, 9)) /3;
+      fftResult[4] = (fftAdd(9, 12)) /4;
+      fftResult[5] = (fftAdd(12, 16)) /5;
+      fftResult[6] = (fftAdd(16, 21)) /6;
+      fftResult[7] = (fftAdd(21, 28)) /8;
+      fftResult[8] = (fftAdd(28, 37)) /10;
+      fftResult[9] = (fftAdd(37, 48)) /12;
+      fftResult[10] = (fftAdd(48, 64)) /17;
+      fftResult[11] = (fftAdd(64, 84)) /21;
+      fftResult[12] = (fftAdd(84, 111)) /28;
+      fftResult[13] = (fftAdd(111, 147)) /37;
+      fftResult[14] = (fftAdd(147, 194)) /48;
+      fftResult[15] = (fftAdd(194, 255)) /62;
+    
+  }
+
+}
+
+void removeLogarithmicNoise() {
+   memcpy(fftResultLogarithmicNoiseless, fftResult, sizeof(fftResult[0])*16);      
+   for(int i=0; i<16; i++) {
+      fftResultLogarithmicNoiseless[i] = fftResultLogarithmicNoiseless[i]-logarithmicNoise[i] <= 0? 0 : fftResultLogarithmicNoiseless[i]-logarithmicNoise[i];
+   }
+}
 
 void logAudio() {
 
@@ -453,4 +512,13 @@ void logAudio() {
     }
     Serial.println("");
 #endif
+
+#ifdef FFT_LOG_NOISELESS_SAMPLING_LOG
+   for(int i=0; i<16; i++) {
+      Serial.print(fftResultLogarithmicNoiseless[i]);
+      Serial.print(" ");
+    }
+    Serial.println("");
+#endif
 }
+

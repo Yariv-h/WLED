@@ -328,9 +328,12 @@ Effect Speed */
 #staytop4 {
 	top: 120px;
 }
-/* Solid Effect Mode */
 #staytop5 {
 	top: 150px;
+}
+/* Solid Effect Mode */
+#staytop6 {
+	top: 170px;
 }
 
 #fxb0 {
@@ -1027,9 +1030,17 @@ input[type=number]::-webkit-outer-spin-button {
         <input id="sliderFFT3" class="noslide" onchange="setFFT3()" oninput="updateTrail(this)" max="255" min="0" type="range" value="252" />
         <div class="sliderdisplay"></div>
       </div>
+	</div>
+	<p class="labels">FFT Scale</p>
+    <div class="staytop" id="staytop5">
+      <i class="icons slider-icon">&#xe409;</i>
+      <div class="sliderwrap il">
+        <input id="sliderFFTScale" class="noslide" onchange="setFFTScale()" oninput="updateTrail(this)" max="3" min="1" type="range" value="1" step="0.1" />
+        <div class="sliderdisplay"></div>
+      </div>
     </div>
     <p class="labels">Effect mode</p>
-    <div class="staytop" id="staytop5">
+    <div class="staytop" id="staytop">
       <button class="btn" id="fxb0" onclick="setX(0);">Solid</button>
     </div>
     <div id="fxlist">
@@ -1881,6 +1892,11 @@ function setFFT2() {
 function setFFT3() {
   var obj = {"seg": {"f3x": parseInt(d.getElementById('sliderFFT3').value)}};
   requestJson(obj);
+}
+
+function setFFTScale() {
+	var obj = {"seg": {"fscale": parseFloat(d.getElementById('sliderFFTScale').value)}};
+	requestJson(obj);
 }
 
 function toggleCY() {
