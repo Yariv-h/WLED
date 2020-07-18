@@ -5009,15 +5009,21 @@ uint16_t WS2812FX::mode_fft_wall() {
         setPixelColor(i, crgb_to_col(newcolor));
      }
 
-     if(sampleAvg>150) {
+     addGlitterPro(sampleAvg, 60, 250, sampleAvg);
+
+     if(sampleAvg>170) {
          addGlitterPro(sampleAvg, 192, 0, 254);
-         addGlitterPro(sampleAvg, 192, 0, sampleAvg);
+         
      }
 
-     if(sampleAvg> 70) {
-         addGlitterPro(sampleAvg, 50, 250, 250);
-         addGlitterPro(sampleAvg, 50, 250, sampleAvg);
-       }
+     if(sampleAvg> 70 && sampleAvg < 170) {
+         addGlitterPro(sampleAvg, 60, 250, 250);
+         
+     }
+     
+     if(sampleAvg< 70 && sampleAvg > 40) {
+        addGlitterPro(sampleAvg, 48, 250, 250);
+     }
    
     
     fade_out(SEGMENT.intensity);
