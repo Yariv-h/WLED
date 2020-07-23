@@ -7,7 +7,7 @@
 
 #include "wled.h"
 
-//#define FFT_SAMPLING_LOG
+#define FFT_SAMPLING_LOG
 //#define FFT_LOG_NOISELESS_SAMPLING_LOG
 //#define MIC_SAMPLING_LOG 
 
