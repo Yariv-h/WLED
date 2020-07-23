@@ -3933,6 +3933,7 @@ extern double fftBin[];                     // raw FFT data
 extern double fftResult[];                  // summary of bins array. 16 summary bins.
 extern double fftResultLogarithmicNoiseless[];
 extern double beat;
+//extern const TProgmemRGBGradientPalettePtr gGradientPalettes[];
 extern uint16_t lastSample;
 double volume = 1;
 uint32_t ledData[MAX_LEDS];                 // See const.h for a value of 1500.
@@ -5044,3 +5045,314 @@ uint16_t WS2812FX::mode_fft_wall() {
 
      return false;
  } //mode_fft_wall
+
+
+
+byte fftSwpieLoop = 0;
+byte singleColorMode = 0;
+byte BLOCK_SIZE = 20;
+
+
+uint16_t WS2812FX::mode_fft_swiping() {
+
+ double scaleVal = SEGMENT.fft3 /100;
+    for(int i=0; i<16; i++) {
+      fftResultLogarithmicNoiseless[i]*=scaleVal;
+    }
+
+int color = 192; 
+ 
+ fract8 chanceOfGlitter = sampleAvg;
+ 
+
+ if( random8() < chanceOfGlitter-SEGMENT.speed) {
+
+
+    EVERY_N_MILLIS(5000) {
+       singleColorMode++;
+       singleColorMode=singleColorMode%5;
+      }
+
+    switch(singleColorMode) {
+          case 0:
+            if(fftSwpieLoop >= SEGLEN-BLOCK_SIZE) {
+                 fftSwpieLoop-=BLOCK_SIZE;
+                 singleColorMode=1;
+            }
+            fftSwpieLoop+=BLOCK_SIZE;
+            break;
+
+          case 1:
+           if(fftSwpieLoop-BLOCK_SIZE < 0) {
+                fftSwpieLoop+=BLOCK_SIZE;
+                singleColorMode=0;
+            }
+            fftSwpieLoop-=BLOCK_SIZE;
+            break;
+
+          case 2:
+            fftSwpieLoop+=BLOCK_SIZE;
+            fftSwpieLoop=fftSwpieLoop%SEGLEN;
+            break;
+
+          case 3:
+
+            if(fftSwpieLoop-BLOCK_SIZE < 0) {
+              fftSwpieLoop= SEGLEN-BLOCK_SIZE;
+            }
+            fftSwpieLoop-=BLOCK_SIZE;
+            break;
+
+          case 4:
+            if(fftSwpieLoop-BLOCK_SIZE < 0 && fftSwpieLoop-20> -20) {
+              fftSwpieLoop=BLOCK_SIZE;
+            }
+            else if(fftSwpieLoop-BLOCK_SIZE < 0) {
+              fftSwpieLoop= SEGLEN-BLOCK_SIZE-1; // TODO - fix this - not reaching 0...
+            }
+            fftSwpieLoop-=BLOCK_SIZE;
+            break;
+    }
+
+
+    for(int i = fftSwpieLoop; i < fftSwpieLoop+BLOCK_SIZE; i++) {
+
+
+        int sat = constrain(fftResultLogarithmicNoiseless[i%16]+160,0,254);
+        int bri = constrain(fftResultLogarithmicNoiseless[i%16]+100,0,254);
+        int col = constrain(fftResultLogarithmicNoiseless[i%16],0,254);
+        col = 192;
+
+
+
+         if(sat<255 && sat >0 && bri<255 && bri >0 && col<255 && col >0){
+
+           CRGB newcolor = ColorFromPalette(currentPalette, sat, bri, LINEARBLEND);
+           CRGB fastled_col = col_to_crgb(getPixelColor(i));
+
+            nblend(fastled_col, newcolor, 128);
+            setPixelColor(i, fastled_col.red, fastled_col.green, fastled_col.blue);
+
+          // CRGB newcolor = CHSV(col, sat, bri);
+          // setPixelColor(i, crgb_to_col(newcolor));
+         } else {
+           CRGB newcolor = CHSV(col, 0, 0);
+           setPixelColor(i, crgb_to_col(newcolor));
+         }
+    }
+
+   } else {
+    fade_out(SEGMENT.intensity);
+   }
+
+  //return FRAMETIME;
+  return 30+sampleAvg/2;
+
+} //fft swipe
+
+
+
+uint16_t WS2812FX::mode_random_fft() {
+
+    double scaleVal = SEGMENT.fft3 /100;
+    for(int i=0; i<16; i++) {
+      fftResultLogarithmicNoiseless[i]*=scaleVal;
+    }
+
+    int pixel = random(0,234);
+    for(int i=0; i<16; i++) {
+      
+      int sat = constrain(fftResultLogarithmicNoiseless[i%16]+160,0,254);
+      int bri = constrain(fftResultLogarithmicNoiseless[i%16]+100,0,254);
+      int col = constrain(fftResultLogarithmicNoiseless[i%16],0,254);
+
+      CRGB newcolor = ColorFromPalette(currentPalette, sat, bri, LINEARBLEND);
+      CRGB fastled_col = col_to_crgb(getPixelColor(i));
+
+      nblend(fastled_col, newcolor, 128);
+      setPixelColor(pixel+i, fastled_col.red, fastled_col.green, fastled_col.blue);
+
+    }
+
+    if(sampleAvg>170) {
+       //addGlitterPro(sampleAvg, 48, 250, 250);
+       setPixelColor(random16(SEGLEN), ULTRAWHITE);
+    }
+
+    fade_out(SEGMENT.intensity);
+    return 30+sampleAvg/2;
+} // mode_random_fft
+
+
+ uint16_t WS2812FX::dancingBar2() {
+   
+   double scaleVal = SEGMENT.fft3 /100;
+    for(int i=0; i<16; i++) {
+      fftResultLogarithmicNoiseless[i]*=scaleVal;
+    }
+   
+   int offset = 0;     
+   for (int i = 0; i < 16; i++) {  // goes through each octave. skip the first 1, which is not useful
+     
+      int j = fftResultLogarithmicNoiseless[i];
+      int saturation=constrain(j+30, 0,255);
+      int brightness=constrain(j+30, 0,255);
+
+      if (brightness==255) {
+          saturation=50;
+          brightness=200;
+      }    
+
+    int color = SEGCOLOR(0);          
+
+    //if(j < 40 && j > 0) {
+      if(j > 40) {
+      for(int x=0; x < 5; x++) {
+          
+          CRGB newcolor = CHSV(color+(i*5),saturation, brightness); 
+          setPixelColor(0+i+x, crgb_to_col(newcolor));
+      }      
+    } else {
+        CRGB newcolor = CHSV(color+(i*5),saturation, brightness); 
+        setPixelColor(0+i, crgb_to_col(newcolor));
+    }
+     
+   }
+   fade_out(SEGMENT.intensity);
+   return FRAMETIME;
+ } // dancingBar2
+
+
+ uint16_t WS2812FX::fft_blink() {
+   BlandingPallets();
+   double scaleVal = SEGMENT.fft3 /200;
+   for(int i=0; i<16; i++) {
+      fftResultLogarithmicNoiseless[i]*=scaleVal;
+    }
+
+    //int color = SEGCOLOR(0);
+    for(int i=0; i<SEGLEN; i++) {
+      
+      int j = fftResultLogarithmicNoiseless[i%16];
+      int saturation=constrain(j+30, 0,255);
+      int brightness=constrain(j+30, 0,255);
+      //color = constrain(color+j,0,254);
+
+
+      CRGB newcolor = ColorFromPalette(currentPalette1, saturation, brightness, LINEARBLEND);
+      CRGB fastled_col = col_to_crgb(getPixelColor(i));
+
+      nblend(fastled_col, newcolor, 128);
+      setPixelColor(i, fastled_col.red, fastled_col.green, fastled_col.blue);
+
+
+      // CRGB newcolor = CHSV(color,saturation, brightness); 
+      // setPixelColor(i, crgb_to_col(newcolor));
+    }
+    uint16_t tempo = constrain(60-sampleAvg,0,254);
+    return tempo;
+ } //fft blink
+
+
+uint16_t WS2812FX::mode_fft_fib() {
+  BlandingPallets();
+  static uint16_t sPseudotime = 0;
+  static uint16_t sLastMillis = 0;
+  static uint16_t sHue16 = 0;
+ 
+  uint8_t sat8 = beatsin88( 87, 220, 250);
+  uint8_t brightdepth = beatsin88( 341, 96, 224);
+  uint16_t brightnessthetainc16 = beatsin88( 203, (25 * 256), (40 * 256));
+  uint8_t msmultiplier = beatsin88(147, 23, 60);
+
+  uint16_t hue16 = sHue16;//gHue * 256;
+  uint16_t hueinc16 = beatsin88(113, 300, 1500);
+  
+  uint16_t ms = millis();
+  uint16_t deltams = ms - sLastMillis ;
+  sLastMillis  = ms;
+  sPseudotime += deltams * msmultiplier;
+  sHue16 += deltams * beatsin88( 400, 5,9);
+  uint16_t brightnesstheta16 = sPseudotime;
+  
+  for( uint16_t i = 0 ; i < SEGLEN; i++) {
+    hue16 += hueinc16;
+    uint8_t hue8 = hue16 / 256;
+    uint16_t h16_128 = hue16 >> 7;
+    if( h16_128 & 0x100) {
+      hue8 = 255 - (h16_128 >> 1);
+    } else {
+      hue8 = h16_128 >> 1;
+    }
+
+    brightnesstheta16  += brightnessthetainc16;
+    uint16_t b16 = sin16( brightnesstheta16  ) + 32768;
+
+    uint16_t bri16 = (uint32_t)((uint32_t)b16 * (uint32_t)b16) / 65536;
+    uint8_t bri8 = (uint32_t)(((uint32_t)bri16) * brightdepth) / 65536;
+    bri8 += (255 - brightdepth);
+    
+    uint8_t index = hue8;
+    //index = triwave8( index);
+    index = scale8( index, 240);
+
+    CRGB newcolor = ColorFromPalette(currentPalette1, index, bri8, LINEARBLEND);
+    
+
+    uint16_t pixelnumber = i;
+    pixelnumber = (SEGLEN-1) - pixelnumber;
+    
+    CRGB fastled_col = col_to_crgb(getPixelColor(i));
+    nblend(fastled_col, newcolor, 128);
+    setPixelColor(i, fastled_col.red, fastled_col.green, fastled_col.blue);
+  }
+  return FRAMETIME;
+} //fft fib
+
+
+uint8_t gCurrentPaletteNumber = 0;
+void WS2812FX::BlandingPallets() {
+  EVERY_N_MILLISECONDS( 5000 ) {
+    gCurrentPaletteNumber = addmod8( gCurrentPaletteNumber, 1, 54);
+    targetPalette1 = gGradientPalettes[ gCurrentPaletteNumber ];
+  }
+
+  EVERY_N_MILLISECONDS(40) {
+    nblendPaletteTowardPalette( currentPalette1, targetPalette1, 16);
+  }
+} //pallet planding
+
+int mode = 0;
+uint16_t WS2812FX::mode_haan_mix() {
+  
+  EVERY_N_MILLISECONDS( 10000 ) {
+    mode++;
+    mode%=6;
+  }
+
+  switch (mode)
+  {
+  case 0:
+    return mode_fft_wall();
+  case 1:
+    return mode_fft_swiping();
+  case 2:
+    return mode_random_fft();
+  case 3:
+    
+    return mode_fft_fib();
+  case 4:
+    return fft_blink();
+  case 5: 
+    return dancingBar2();
+
+  
+  default:
+    break;
+  }
+
+} //haan mix
+
+
+
+

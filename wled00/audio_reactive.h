@@ -7,9 +7,9 @@
 
 #include "wled.h"
 
-#define FFT_SAMPLING_LOG
+//#define FFT_SAMPLING_LOG
 //#define FFT_LOG_NOISELESS_SAMPLING_LOG
-//#define MIC_SAMPLING_LOG 
+//#define MIC_SAMPLING_LOG
 
 #ifndef ESP8266
   TaskHandle_t FFT_Task;

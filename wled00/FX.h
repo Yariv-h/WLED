@@ -29,6 +29,8 @@
 
 #include "NpbWrapper.h"
 #include "const.h"
+#include "palettes.h"
+
 
 #define FASTLED_INTERNAL //remove annoying pragma messages
 #include "FastLED.h"
@@ -102,7 +104,7 @@
 #define IS_REVERSE      ((SEGMENT.options & REVERSE     ) == REVERSE     )
 #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
-#define MODE_COUNT                     142
+#define MODE_COUNT                     148
 
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
@@ -246,6 +248,12 @@
 #define FX_MODE_2DMEATBALLS            139
 #define FX_FFT_TEST                    140
 #define FX_FFT_WALL                    141
+#define FX_FFT_SWIPE                   142
+#define FX_RANDOM_FFT                  143
+#define FX_DANCING_BAR                 144
+#define FX_BLINK                       145
+#define FX_FFT_FIB                     146
+#define FX_HAAN_MIX                    147
 
 
 // Sound reactive external variables
@@ -490,10 +498,20 @@ class WS2812FX {
       _mode[FX_MODE_2DMEATBALLS]             = &WS2812FX::mode_2Dmeatballs;
       _mode[FX_FFT_TEST]                     = &WS2812FX::fft_test;
       _mode[FX_FFT_WALL]                     = &WS2812FX::mode_fft_wall;
+      _mode[FX_FFT_SWIPE]                    = &WS2812FX::mode_fft_swiping;
+      _mode[FX_RANDOM_FFT]                   = &WS2812FX::mode_random_fft;
+      _mode[FX_DANCING_BAR]                  = &WS2812FX::dancingBar2;
+      _mode[FX_BLINK]                        = &WS2812FX::fft_blink; 
+      _mode[FX_FFT_FIB]                      = &WS2812FX::mode_fft_fib;
+      _mode[FX_HAAN_MIX]                     = &WS2812FX::mode_haan_mix;
 
       _brightness = DEFAULT_BRIGHTNESS;
       currentPalette = CRGBPalette16(CRGB::Black);
+      currentPalette1 = CRGBPalette16(CRGB::Black);
       targetPalette = CloudColors_p;
+      targetPalette1 = gGradientPalettes[0];
+
+
       ablMilliampsMax = 850;
       currentMilliamps = 0;
       timebase = 0;
@@ -731,7 +749,14 @@ class WS2812FX {
       mode_2Dmatrix(void),
       mode_2Dmeatballs(void),
       mode_fft_wall(void),
-      fft_test(void);
+      fft_test(void),
+      mode_random_fft(void),
+      dancingBar2(void),
+      fft_blink(void),
+      mode_fft_fib(void),
+      mode_haan_mix(void),
+      mode_fft_swiping(void);
+      void BlandingPallets();
       bool pixelToSkip(int pixel);
       void addGlitterPro(fract8 chanceOfGlitter, int color, int sat, int bright);
 
@@ -742,6 +767,9 @@ class WS2812FX {
     CRGB col_to_crgb(uint32_t);
     CRGBPalette16 currentPalette;
     CRGBPalette16 targetPalette;
+
+    CRGBPalette16 currentPalette1;
+    CRGBPalette16 targetPalette1;
 
     uint32_t now;
     uint16_t _length, _lengthRaw, _virtualSegmentLength;
@@ -823,7 +851,7 @@ const char JSON_mode_names[] PROGMEM = R"=====([
 "Noise Pal","Sine","* Pixels","* Pixelwave","* Juggles","* Matripix","* Gravimeter","* Plasmoid","* Puddles","* Midnoise",
 "* Noisemeter","** Freqwave","** Freqmatrix","** Spectral","* Waterfall","** Freqpixel","** Binmap","** Noisepeak","* Noisefire","* Puddlepeak",
 "** Noisemove","2D Plasma","Perlin Move","* Ripple Peak","2D FireNoise","2D Squared Swirl","2D Fire2012","2D DNA","2D Matrix","2D Meatballs",
-"** FFT_TEST","** FFT_WALL"
+"! FFT_TEST","! FFT_WALL", "! FFW_SWIPE", "! FFT_RANDOM", "! FFT_DANCING", "! FFT_BLINK", "! FFF_FIB", "! FFT_HAAN_MIX"
 ])=====";
 
 

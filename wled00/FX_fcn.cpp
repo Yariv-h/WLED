@@ -25,7 +25,7 @@
 */
 
 #include "FX.h"
-#include "palettes.h"
+
 
 //enable custom per-LED mapping. This can allow for better effects on matrices or special displays
 //#define WLED_CUSTOM_LED_MAPPING
@@ -729,6 +729,7 @@ CRGB WS2812FX::col_to_crgb(uint32_t color)
   fastled_col.blue =  (color       & 0xFF);
   return fastled_col;
 }
+
 
 
 void WS2812FX::load_gradient_palette(uint8_t index)
