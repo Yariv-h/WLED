@@ -333,6 +333,16 @@ Effect Speed */
 	top: 150px;
 }
 
+#staytop6 {
+	top: 170px;
+}
+
+
+#staytop7 {
+	top: 190px;
+}
+
+
 #fxb0 {
 	margin-bottom: 2px;
 }
@@ -984,7 +994,16 @@ input[type=number]::-webkit-outer-spin-button {
         <option>Default</option>
         <option>Error!</option>
       </select>
-    </div>
+	</div>
+	<div id="wwrap2">
+		<p class="labels">Fast Led Color</p>
+		<img id="fastLedColorBar" style="max-width: 58%;" src="./fastledcol.png">
+		<br>
+		<div class="sliderwrap il">
+		  <input id="fastledcol" class="noslide" onchange="setFastLed(0)" oninput="updateTrail(this)" max="254" min="0" type="range" value="0" />
+		  <div class="sliderdisplay"></div>
+		</div>
+	  </div>
   </div>
 
   <div id="Effects" class="tabcontent">
@@ -1027,7 +1046,24 @@ input[type=number]::-webkit-outer-spin-button {
         <input id="sliderFFT3" class="noslide" onchange="setFFT3()" oninput="updateTrail(this)" max="255" min="0" type="range" value="252" />
         <div class="sliderdisplay"></div>
       </div>
-    </div>
+	</div>
+	<p class="labels">Fade Time <span id="fadeTime"></span></p>
+    <div class="staytop" id="staytop5">
+      <i class="icons slider-icon">&#xe409;</i>
+      <div class="sliderwrap il">
+        <input id="sliderFadeTime" class="noslide" onchange="setFadeTime()" oninput="updateTrail(this)" max="10000" min="2000" type="range" value="5000" step=500 />
+        <div class="sliderdisplay"></div>
+      </div>
+	</div>
+	<p class="labels">Effect Time <span id="effectTime"></span></p>
+    <div class="staytop" id="staytop6">
+      <i class="icons slider-icon">&#xe409;</i>
+      <div class="sliderwrap il">
+        <input id="sliderEffetTime" class="noslide" onchange="setEffectTime()" oninput="updateTrail(this)" max="600000" min="5000" type="range" value="252" step=5000 />
+        <div class="sliderdisplay"></div>
+      </div>
+	</div>
+	
     <p class="labels">Effect mode</p>
     <div class="staytop" id="staytop5">
       <button class="btn" id="fxb0" onclick="setX(0);">Solid</button>
@@ -1847,6 +1883,12 @@ function setPalette()
 	requestJson(obj);
 }
 
+function setFastLed() {
+
+	var obj = {"seg": {"flc": parseInt(d.getElementById('fastledcol').value)}};
+	obj.transition = parseInt(d.getElementById('cyctt').value*10);
+	requestJson(obj);
+}
 function setBri() {
 	var obj = {"bri": parseInt(d.getElementById('sliderBri').value)};
 	obj.transition = parseInt(d.getElementById('cyctt').value*10);
@@ -1880,6 +1922,18 @@ function setFFT2() {
 
 function setFFT3() {
   var obj = {"seg": {"f3x": parseInt(d.getElementById('sliderFFT3').value)}};
+  requestJson(obj);
+}
+
+function setFadeTime() {
+  var obj = {"seg": {"fadeTime": parseInt(d.getElementById('sliderFadeTime').value)}};
+  requestJson(obj);
+  document.getElementById("fadeTime").innerHTML = d.getElementById('sliderFadeTime').value;
+}
+
+function setEffectTime() {
+	var obj = {"seg": {"effectTime": parseInt(d.getElementById('sliderEffetTime').value)}};
+	document.getElementById("effectTime").innerHTML = d.getElementById('sliderEffetTime').value;
   requestJson(obj);
 }
 

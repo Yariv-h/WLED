@@ -33,8 +33,11 @@
 /*
  * No blinking. Just plain old static light.
  */
+
 uint16_t WS2812FX::mode_static(void) {
   fill(SEGCOLOR(0));
+  printSetNSettings();
+  //Serial.println(SEGCOLOR(0));
   return (SEGMENT.getOption(SEG_OPTION_TRANSITIONAL)) ? FRAMETIME : 500; //update faster if in transition
 }
 
@@ -90,6 +93,7 @@ uint16_t WS2812FX::mode_blink(void) {
  * Classic Blink effect. Cycling through the rainbow.
  */
 uint16_t WS2812FX::mode_blink_rainbow(void) {
+  printSetNSettings();
   return blink(color_wheel(SEGENV.call & 0xFF), SEGCOLOR(1), false, false);
 }
 
@@ -236,6 +240,7 @@ uint16_t WS2812FX::mode_random_color(void) {
 // * to new random colors.
  */
 uint16_t WS2812FX::mode_dynamic(void) {
+  printSetNSettings();
   if (!SEGENV.allocateData(SEGLEN)) return mode_static(); //allocation failed
 
   if(SEGENV.call == 0) {
@@ -329,7 +334,9 @@ uint16_t WS2812FX::scan(bool dual)
 /*
  * Runs a single pixel back and forth.
  */
+
 uint16_t WS2812FX::mode_scan(void) {
+  printSetNSettings();
   return scan(false);
 }
 
@@ -338,6 +345,7 @@ uint16_t WS2812FX::mode_scan(void) {
  * Runs two pixel back and forth in opposite directions.
  */
 uint16_t WS2812FX::mode_dual_scan(void) {
+  printSetNSettings();
   return scan(true);
 }
 
@@ -442,7 +450,11 @@ uint16_t WS2812FX::running_base(bool saw) {
       }
     }
     s = sin8(a);
-    setPixelColor(i, color_blend(color_from_palette(i, true, PALETTE_SOLID_WRAP, 0), SEGCOLOR(1), s));
+    if(haanPalettes) {
+      setColorFromPaletts(s, i, i);
+    } else {
+      setPixelColor(i, color_blend(color_from_palette(i, true, PALETTE_SOLID_WRAP, 0), SEGCOLOR(1), s));
+    }
   }
   return FRAMETIME;
 }
@@ -452,6 +464,7 @@ uint16_t WS2812FX::running_base(bool saw) {
  * Running lights effect with smooth sine transition.
  */
 uint16_t WS2812FX::mode_running_lights(void) {
+  printSetNSettings();
   return running_base(false);
 }
 
@@ -460,6 +473,7 @@ uint16_t WS2812FX::mode_running_lights(void) {
  * Running lights effect with sawtooth transition.
  */
 uint16_t WS2812FX::mode_saw(void) {
+  printSetNSettings();
   return running_base(true);
 }
 
@@ -557,6 +571,7 @@ uint16_t WS2812FX::mode_dissolve_random(void) {
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
 uint16_t WS2812FX::mode_sparkle(void) {
+  printSetNSettings();
   for(uint16_t i = 0; i < SEGLEN; i++) {
     setPixelColor(i, color_from_palette(i, true, PALETTE_SOLID_WRAP, 1));
   }
@@ -569,6 +584,9 @@ uint16_t WS2812FX::mode_sparkle(void) {
   }
 
   setPixelColor(SEGENV.aux0, SEGCOLOR(0));
+  if(shouldAddGlitterPro) {
+    addGlitterPro(sampleAvg, SEGMENT.fastledColor, 254, 254);
+  }
   return FRAMETIME;
 }
 
@@ -578,11 +596,14 @@ uint16_t WS2812FX::mode_sparkle(void) {
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
 uint16_t WS2812FX::mode_flash_sparkle(void) {
+  printSetNSettings();
   for(uint16_t i = 0; i < SEGLEN; i++) {
     setPixelColor(i, color_from_palette(i, true, PALETTE_SOLID_WRAP, 0));
   }
 
   if(random8(5) == 0) {
+    SEGENV.aux0 = random16(SEGLEN); // aux0 stores the random led index
+    setPixelColor(SEGENV.aux0, SEGCOLOR(1));
     SEGENV.aux0 = random16(SEGLEN); // aux0 stores the random led index
     setPixelColor(SEGENV.aux0, SEGCOLOR(1));
     return 20;
@@ -596,6 +617,7 @@ uint16_t WS2812FX::mode_flash_sparkle(void) {
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
 uint16_t WS2812FX::mode_hyper_sparkle(void) {
+  printSetNSettings();
   for(uint16_t i = 0; i < SEGLEN; i++) {
     setPixelColor(i, color_from_palette(i, true, PALETTE_SOLID_WRAP, 0));
   }
@@ -761,6 +783,7 @@ uint16_t WS2812FX::chase(uint32_t color1, uint32_t color2, uint32_t color3, bool
  * Bicolor chase, more primary color.
  */
 uint16_t WS2812FX::mode_chase_color(void) {
+  printSetNSettings();
   return chase(SEGCOLOR(1), (SEGCOLOR(2)) ? SEGCOLOR(2) : SEGCOLOR(0), SEGCOLOR(0), true);
 }
 
@@ -1076,6 +1099,7 @@ uint16_t WS2812FX::larson_scanner(bool dual) {
  * Firing comets from one end. "Lighthouse"
  */
 uint16_t WS2812FX::mode_comet(void) {
+  printSetNSettings();
   uint16_t counter = now * ((SEGMENT.speed >>2) +1);
   uint16_t index = counter * SEGLEN >> 16;
   if (SEGENV.call == 0) SEGENV.aux0 = index;
@@ -1102,6 +1126,7 @@ uint16_t WS2812FX::mode_comet(void) {
  * Fireworks function.
  */
 uint16_t WS2812FX::mode_fireworks() {
+  printSetNSettings();
   fade_out(0);
   if (SEGENV.call == 0) {
     SEGENV.aux0 = UINT16_MAX;
@@ -1212,6 +1237,7 @@ uint16_t WS2812FX::gradient_base(bool loading) {
  * Gradient run
  */
 uint16_t WS2812FX::mode_gradient(void) {
+  printSetNSettings();
   return gradient_base(false);
 }
 
@@ -1286,6 +1312,7 @@ uint16_t WS2812FX::mode_police()
 //Police All with custom colors
 uint16_t WS2812FX::mode_two_areas()
 {
+  printSetNSettings();
   return police_base(SEGCOLOR(0), SEGCOLOR(1), true);
 }
 
@@ -1293,6 +1320,7 @@ uint16_t WS2812FX::mode_two_areas()
 //Police Lights with custom colors
 uint16_t WS2812FX::mode_two_dots()
 {
+  printSetNSettings();
   fill(SEGCOLOR(2));
   uint32_t color2 = (SEGCOLOR(1) == SEGCOLOR(2)) ? SEGCOLOR(0) : SEGCOLOR(1);
 
@@ -1327,6 +1355,7 @@ uint16_t WS2812FX::tricolor_chase(uint32_t color1, uint32_t color2) {
  * Alternating white/red/black pixels running. PLACEHOLDER
  */
 uint16_t WS2812FX::mode_circus_combustus(void) {
+  printSetNSettings();
   return tricolor_chase(RED, WHITE);
 }
 
@@ -1683,6 +1712,7 @@ uint16_t WS2812FX::mode_pride_2015(void)
 
 //eight colored dots, weaving in and out of sync with each other
 uint16_t WS2812FX::mode_juggle(void){
+  
   fade_out(SEGMENT.intensity);
   CRGB fastled_col;
   byte dothue = 0;
@@ -1791,6 +1821,7 @@ uint16_t WS2812FX::mode_fire_2012()
 // widely-varying set of parameters, using a color palette.
 uint16_t WS2812FX::mode_colorwaves()
 {
+  printSetNSettings();
   uint16_t duration = 10 + SEGMENT.speed;
   uint16_t sPseudotime = SEGENV.step;
   uint16_t sHue16 = SEGENV.aux0;
@@ -1962,6 +1993,7 @@ uint16_t WS2812FX::mode_noise16_4()
 //based on https://gist.github.com/kriegsman/5408ecd397744ba0393e
 uint16_t WS2812FX::mode_colortwinkle()
 {
+  printSetNSettings();
   uint16_t dataSize = (SEGLEN+7) >> 3; //1 bit per LED
   if (!SEGENV.allocateData(dataSize)) return mode_static(); //allocation failed
 
@@ -2225,10 +2257,12 @@ uint16_t WS2812FX::ripple_base(bool rainbow)
 }
 
 uint16_t WS2812FX::mode_ripple(void) {
+  printSetNSettings();
   return ripple_base(false);
 }
 
 uint16_t WS2812FX::mode_ripple_rainbow(void) {
+  printSetNSettings();
   return ripple_base(true);
 }
 
@@ -2798,12 +2832,14 @@ uint16_t WS2812FX::candle(bool multi)
 
 uint16_t WS2812FX::mode_candle()
 {
+  printSetNSettings();
   return candle(false);
 }
 
 
 uint16_t WS2812FX::mode_candle_multi()
 {
+  printSetNSettings();
   return candle(true);
 }
 
@@ -3050,6 +3086,7 @@ uint16_t WS2812FX::mode_exploding_fireworks(void)
  */
 uint16_t WS2812FX::mode_drip(void)
 {
+  printSetNSettings();
   //allocate segment data
   uint16_t numDrops = 4;
   uint16_t dataSize = sizeof(spark) * numDrops;
@@ -3115,7 +3152,7 @@ uint16_t WS2812FX::mode_drip(void)
       }
     }
   }
-  return FRAMETIME;
+  return FRAMETIME + SEGMENT.fft3;
 }
 
 
@@ -3124,6 +3161,9 @@ uint16_t WS2812FX::mode_drip(void)
 / adapted from https://github.com/atuline/FastLED-Demos/blob/master/plasma/plasma.ino
 */
 uint16_t WS2812FX::mode_plasma(void) {
+  
+  printSetNSettings();
+
   uint8_t thisPhase = beatsin8(6,-64,64);                       // Setting phase change for a couple of waves.
   uint8_t thatPhase = beatsin8(7,-64,64);
 
@@ -3131,8 +3171,16 @@ uint16_t WS2812FX::mode_plasma(void) {
     uint8_t colorIndex = cubicwave8((i*(1+ 3*(SEGMENT.speed >> 5)))+(thisPhase) & 0xFF)/2   // factor=23 // Create a wave and add a phase change and add another wave with its own phase change.
                              + cos8((i*(1+ 2*(SEGMENT.speed >> 5)))+(thatPhase) & 0xFF)/2;  // factor=15 // Hey, you can even change the frequencies if you wish.
     uint8_t thisBright = qsub8(colorIndex, beatsin8(6,0, (255 - SEGMENT.intensity)|0x01 ));
-    CRGB color = ColorFromPalette(currentPalette, colorIndex, thisBright, LINEARBLEND);
-    setPixelColor(i, color.red, color.green, color.blue);
+    
+    if(haanPalettes) {
+      setColorFromPaletts(thisBright, thisBright, i);
+    } else {
+      //CRGB color = ColorFromPalette(currentPalette, thisBright, thisBright, LINEARBLEND);
+      //uint16_t col = CRGBColor;
+      uint16_t col = SEGMENT.fastledColor;
+      CRGB newcolor = CHSV(col, thisBright, thisBright);
+      setPixelColor(i, newcolor.red, newcolor.green, newcolor.blue);
+    }
   }
 
   return FRAMETIME;
@@ -3185,7 +3233,9 @@ uint16_t WS2812FX::mode_percent(void) {
 /*
 / Modulates the brightness similar to a heartbeat
 */
+
 uint16_t WS2812FX::mode_heartbeat(void) {
+  printSetNSettings();
   uint8_t bpm = 40 + (SEGMENT.speed >> 4);
   uint32_t msPerBeat = (60000 / bpm);
   uint32_t secondBeat = (msPerBeat / 3);
@@ -3239,6 +3289,7 @@ uint16_t WS2812FX::mode_heartbeat(void) {
 //
 uint16_t WS2812FX::mode_pacifica()
 {
+  printSetNSettings();
   CRGBPalette16 pacifica_palette_1 =
     { 0x000507, 0x000409, 0x00030B, 0x00030D, 0x000210, 0x000212, 0x000114, 0x000117,
       0x000019, 0x00001C, 0x000026, 0x000031, 0x00003B, 0x000046, 0x14554B, 0x28AA50 };
@@ -3325,12 +3376,15 @@ CRGB WS2812FX::pacifica_one_layer(uint16_t i, CRGBPalette16& p, uint16_t cistart
 }
 
 //Solid colour background with glitter
+
 uint16_t WS2812FX::mode_solid_glitter()
 {
-  fill(SEGCOLOR(0));
+  printSetNSettings();
+  fill(SEGCOLOR(1));
 
   if (SEGMENT.intensity > random8())
   {
+    setPixelColor(random16(SEGLEN), ULTRAWHITE);
     setPixelColor(random16(SEGLEN), ULTRAWHITE);
   }
   return FRAMETIME;
@@ -3391,8 +3445,8 @@ uint16_t WS2812FX::mode_sunrise() {
 /*
  * Best of both worlds from Palette and Spot effects. By Aircoookie
  */
-uint16_t WS2812FX::mode_flow(void)
-{
+uint16_t WS2812FX::mode_flow(void) {
+  printSetNSettings();
   uint16_t counter = 0;
   if (SEGMENT.speed != 0)
   {
@@ -3469,7 +3523,12 @@ uint16_t WS2812FX::phased_base(uint8_t moder) {                  // We're making
     val += phase * (i % modVal +1) /2;                           // This sets the varying phase change of the waves. By Andrew Tuline.
     uint8_t b = cubicwave8(val);                                 // Now we make an 8 bit sinewave.
     b = (b > cutOff) ? (b - cutOff) : 0;                         // A ternary operator to cutoff the light.
-    setPixelColor(i, color_blend(SEGCOLOR(1), color_from_palette(index, false, false, 0), b));
+
+    if(haanPalettes) {
+      setColorFromPaletts(b, index, i);
+    } else {
+      setPixelColor(i, color_blend(SEGCOLOR(1), color_from_palette(index, false, false, 0), b));
+    }
     index += 256 / SEGLEN;
   }
 
@@ -3478,12 +3537,13 @@ uint16_t WS2812FX::phased_base(uint8_t moder) {                  // We're making
 
 
 uint16_t WS2812FX::mode_phased(void) {
+  printSetNSettings();
   return phased_base(0);
-
 }
 
 
 uint16_t WS2812FX::mode_phased_noise(void) {
+  printSetNSettings();
   return phased_base(1);
 }
 
@@ -3548,7 +3608,7 @@ uint16_t WS2812FX::mode_noisepal(void) {                      // Slow noise pale
 //
 uint16_t WS2812FX::mode_sinewave(void) {                  // Adjustable sinewave. By Andrew Tuline
   //#define qsuba(x, b)  ((x>b)?x-b:0)                    // Analog Unsigned subtraction macro. if result <0, then => 0
-
+  printSetNSettings();
   uint16_t colorIndex = now /32;//(256 - SEGMENT.fft1);   // Amount of colour change.
 
   SEGENV.step += SEGMENT.speed/16;                        // Speed of animation.
@@ -3575,6 +3635,7 @@ uint16_t WS2812FX::mode_sinewave(void) {                  // Adjustable sinewave
 // 16 bit perlinmove. Use Perlin Noise instead of sinewaves for movement. By Andrew Tuline.
 // Controls are speed, # of pixels, faderate.
 uint16_t WS2812FX::mode_perlinmove(void) {
+  printSetNSettings();
 
   fade_out(255-SEGMENT.fft1);
   for (int i=0; i<SEGMENT.intensity/16+1; i++) {
@@ -3594,13 +3655,19 @@ uint16_t WS2812FX::mode_perlinmove(void) {
 //   * PIXELS       //
 //////////////////////
 
-uint16_t WS2812FX::mode_pixels(void) {              // Pixels. By Andrew Tuline.
-
+uint16_t WS2812FX::mode_pixels() {              // Pixels. By Andrew Tuline.
+  printSetNSettings();
   fade_out(4);
 
   for (int i=0; i <SEGMENT.intensity/16; i++) {
     uint16_t segLoc = random(SEGLEN);               // 16 bit for larger strands of LED's.
-    setPixelColor(segLoc, color_blend(SEGCOLOR(1), color_from_palette(myVals[i%32]+i*4, false, PALETTE_SOLID_WRAP, 0), sampleAgc));
+
+    if(haanPalettes) {
+       int index = (myVals[i%32]+i*4);
+       setColorFromPaletts(sampleAgc, index, segLoc);
+     } else {
+      setPixelColor(segLoc, color_blend(SEGCOLOR(1), color_from_palette(myVals[i%32]+i*4, false, PALETTE_SOLID_WRAP, 0), sampleAgc));
+    }
   }
 
   return FRAMETIME;
@@ -3636,9 +3703,9 @@ uint16_t WS2812FX::mode_pixelwave(void) {                                 // Pix
 //////////////////////
 
 uint16_t WS2812FX::mode_juggles(void) {                                   // Juggles. By Andrew Tuline.
-
+  printSetNSettings();
   static int thistime = 20;
-
+  
   EVERY_N_MILLISECONDS_I(pixTimer, SEGMENT.speed) {                       // Using FastLED's timer. You want to change speed? You need to
 
     pixTimer.setPeriod((256 - SEGMENT.speed) >> 2);                       // change it down here!!! By Andrew Tuline.
@@ -3646,7 +3713,12 @@ uint16_t WS2812FX::mode_juggles(void) {                                   // Jug
     fade_out(224);
 
     for (int i=0; i<SEGMENT.intensity/32; i++) {
-      setPixelColor(beatsin16(thistime+i*2,0,SEGLEN-1), color_blend(SEGCOLOR(1), color_from_palette(millis()/4+i*2, false, PALETTE_SOLID_WRAP, 0), sampleAgc));
+       if(haanPalettes) {
+         int index = (millis()/4+i*2);
+         setColorFromPaletts(sampleAgc, index, beatsin16(thistime+i*2,0,SEGLEN-1));
+       } else {
+        setPixelColor(beatsin16(thistime+i*2,0,SEGLEN-1), color_blend(SEGCOLOR(1), color_from_palette(millis()/4+i*2, false, PALETTE_SOLID_WRAP, 0), sampleAgc));
+      }
     }
   }
 
@@ -3713,7 +3785,7 @@ uint16_t WS2812FX::mode_gravimeter(void) {                                // Gra
 //////////////////////
 
 uint16_t WS2812FX::mode_plasmoid(void) {                                  // Plasmoid. By Andrew Tuline.
-
+  printSetNSettings();
   static int16_t thisphase = 0;                                           // Phase of a cubicwave8.
   static int16_t thatphase = 0;                                           // Phase of the cos8.
 
@@ -3729,7 +3801,12 @@ uint16_t WS2812FX::mode_plasmoid(void) {                                  // Pla
     colorIndex=thisbright;
 
     if (sampleAvg * 8 * SEGMENT.intensity/256 > thisbright) {thisbright = 255;} else {thisbright = 0;}
-    setPixelColor(i, color_blend(SEGCOLOR(1), color_from_palette(colorIndex, false, PALETTE_SOLID_WRAP, 0), thisbright));
+
+     if(haanPalettes) {
+       setColorFromPaletts(thisbright, colorIndex, i);
+     } else {
+      setPixelColor(i, color_blend(SEGCOLOR(1), color_from_palette(colorIndex, false, PALETTE_SOLID_WRAP, 0), thisbright));
+    }
   }
 
   return FRAMETIME;
@@ -3766,7 +3843,7 @@ uint16_t WS2812FX::mode_puddles(void) {                                   // Pud
 //////////////////////
 
 uint16_t WS2812FX::mode_midnoise(void) {                                  // Midnoise. By Andrew Tuline.
-
+  printSetNSettings();
   static uint16_t xdist;
   static uint16_t ydist;
 
@@ -3853,7 +3930,7 @@ uint16_t WS2812FX::mode_noisefire(void) {     // Noisefire. By Andrew Tuline.
 
 // Andrew's crappy peak detector. If I were 40+ years younger, I'd learn signal processing.
 uint16_t WS2812FX::mode_puddlepeak(void) {                                // Puddlepeak. By Andrew Tuline.
-
+  printSetNSettings();
   uint16_t size = 0;
   uint8_t fadeVal = map(SEGMENT.speed,0,255, 224, 255);
   uint16_t pos = random(SEGLEN);                                          // Set a random starting position.
@@ -3867,11 +3944,15 @@ uint16_t WS2812FX::mode_puddlepeak(void) {                                // Pud
   }
 
   for(int i=0; i<size; i++) {                                             // Flash the LED's.
-    setPixelColor(pos+i, color_blend(SEGCOLOR(1), color_from_palette(millis(), false, PALETTE_SOLID_WRAP, 0), 255));
+     if(haanPalettes) {
+       setColorFromPaletts(255, sampleAvg, pos+i);
+     } else {
+      setPixelColor(pos+i, color_blend(SEGCOLOR(1), color_from_palette(millis(), false, PALETTE_SOLID_WRAP, 0), 255));
+     }
 
   }
 
-  return FRAMETIME;
+  return FRAMETIME+10; //haan change
 } // mode_puddlepeak()
 
 
@@ -3880,7 +3961,7 @@ uint16_t WS2812FX::mode_puddlepeak(void) {                                // Pud
 /////////////////////////////////
 
 uint16_t WS2812FX::mode_ripplepeak(void) {                    // * Ripple peak. By Andrew Tuline.
-                                                              // This currently has no controls.
+  printSetNSettings();                                                            // This currently has no controls.
   #define maxsteps 16                                         // Case statement wouldn't allow a variable.
 
   static uint8_t colour;                                      // Ripple colour is randomized.
@@ -3934,6 +4015,8 @@ extern double fftResult[];                  // summary of bins array. 16 summary
 extern double beat;
 extern uint16_t lastSample;
 double volume = 1;
+//extern bool haanPalettes;
+//extern int CRGBColor;
 uint32_t ledData[MAX_LEDS];                 // See const.h for a value of 1500.
 uint32_t dataStore[4096];										// we are declaring a storage area or 64 x 64 (4096) words.
 
@@ -4136,14 +4219,19 @@ uint16_t WS2812FX::mode_freqmatrix(void) {        // Freqmatrix. By Andreas Ples
 //////////////////////
 
 uint16_t WS2812FX::mode_freqpixel(void) {                                 // Freqpixel. By Andrew Tuline.
-
+  printSetNSettings();
 #ifndef ESP8266
 
   uint16_t fadeRate = 2*SEGMENT.speed - SEGMENT.speed*SEGMENT.speed/255;  // Get to 255 as quick as you can.
   fade_out(fadeRate);
   uint16_t locn = random16(0,SEGLEN);
   uint8_t pixCol = (log10((int)FFT_MajorPeak) - 2.26) * 177;              // log10 frequency range is from 2.26 to 3.7. Let's scale accordingly.
-  setPixelColor(locn, color_blend(SEGCOLOR(1), color_from_palette(SEGMENT.intensity+pixCol, false, PALETTE_SOLID_WRAP, 0), (int)FFT_Magnitude>>8));
+
+  if(haanPalettes) {
+     setColorFromPaletts((int)FFT_Magnitude>>8, SEGMENT.intensity+pixCol, locn);
+  } else {
+    setPixelColor(locn, color_blend(SEGCOLOR(1), color_from_palette(SEGMENT.intensity+pixCol, false, PALETTE_SOLID_WRAP, 0), (int)FFT_Magnitude>>8));
+  }
 
 #else
   fade_out(224);
@@ -4276,7 +4364,7 @@ uint16_t WS2812FX::mode_noisemove(void) {     // Noisemove    By: Andrew Tuline
 //////////////////////
 
 uint16_t WS2812FX::mode_noisepeak(void) {     // Noisepeak  Frequency noise beat (err. . . OK peak) to blast out palette based perlin noise across SEGLEN. By Andrew Tuline.
-
+  printSetNSettings();
 #ifndef ESP8266
 
   static CRGBPalette16 thisPalette;
@@ -4554,7 +4642,7 @@ uint16_t i;
 uint16_t WS2812FX::mode_2Dplasma(void) {      // By Andreas Pleschutznig. A work in progress.
 
 #ifndef ESP8266
-
+  printSetNSettings();
   if (matrixWidth * matrixHeight > SEGLEN) {fade_out(224); return FRAMETIME;}                                 // No, we're not going to overrun the segment.
 
   static uint8_t ihue=0;
@@ -4633,8 +4721,19 @@ uint16_t WS2812FX::mode_2Dplasma(void) {      // By Andreas Pleschutznig. A work
         bri = dim8_raw( bri * 2);
       }
 
-      CRGB color = ColorFromPalette( currentPalette, index, bri);
-      setPixelColor(XY(i, j), color.red, color.green, color.blue);
+      if(haanPalettes) {
+        setColorFromPaletts(bri, index, XY(i, j));
+      } else {
+        //uint16_t col = CRGBColor;
+        uint16_t col = SEGMENT.fastledColor;
+        CRGB newcolor = CHSV(col, index, bri);
+        setPixelColor(XY(i, j), crgb_to_col(newcolor));
+
+        // CRGB color = ColorFromPalette( currentPalette, index, bri);
+        // setPixelColor(XY(i, j), color.red, color.green, color.blue);
+      }
+
+      
       }
     }
   ihue+=1;
@@ -4702,7 +4801,7 @@ uint16_t WS2812FX::mode_2Dsquaredswirl(void) {  // By: Mark Kriegsman. https://g
                                                 // Modifed by: Andrew Tuline
                                                 // fft3 affects the blur amount.
 #ifndef ESP8266
-
+  printSetNSettings();
   if (matrixWidth * matrixHeight > SEGLEN) {return blink(CRGB::Red, CRGB::Black, false, false);}    // No, we're not going to overrun the segment.
 
   CRGB *leds = (CRGB *)ledData;
@@ -4723,10 +4822,25 @@ uint16_t WS2812FX::mode_2Dsquaredswirl(void) {  // By: Mark Kriegsman. https://g
 
   uint16_t ms = millis();
 
-  leds[XY( i, m)] += ColorFromPalette(currentPalette, ms/29, 255, LINEARBLEND);
-  leds[XY( j, n)] += ColorFromPalette(currentPalette, ms/41, 255, LINEARBLEND);
-  leds[XY( k, p)] += ColorFromPalette(currentPalette, ms/73, 255, LINEARBLEND);
+  if(haanPalettes) {
+     BlandingPallets(); 
+     leds[XY( i, m)] += ColorFromPalette(currentPalette1, ms/29, 255, LINEARBLEND);
+     leds[XY( j, n)] += ColorFromPalette(currentPalette1, ms/41, 255, LINEARBLEND);
+     leds[XY( k, p)] += ColorFromPalette(currentPalette1, ms/73, 255, LINEARBLEND);
+  } else {
 
+      //uint16_t col = CRGBColor;
+      uint16_t col = SEGMENT.fastledColor;
+      CRGB newcolor = CHSV(col, ms/29, 255);
+
+      leds[XY( i, m)] += newcolor;
+      leds[XY( j, n)] += newcolor;
+      leds[XY( k, p)] += newcolor;
+
+      // leds[XY( i, m)] += ColorFromPalette(currentPalette, ms/29, 255, LINEARBLEND);
+      // leds[XY( j, n)] += ColorFromPalette(currentPalette, ms/41, 255, LINEARBLEND);
+      // leds[XY( k, p)] += ColorFromPalette(currentPalette, ms/73, 255, LINEARBLEND);
+  }
   for (int i=0; i<SEGLEN; i++) {
     setPixelColor(i, leds[i].red, leds[i].green, leds[i].blue);
   }
@@ -4808,7 +4922,7 @@ uint16_t WS2812FX::mode_2Dfire2012(void) {    // Fire2012 by Mark Kriegsman. Con
 
 uint16_t WS2812FX::mode_2Ddna(void) {         // dna originally by by ldirko at https://pastebin.com/pCkkkzcs. Updated by Preyy. WLED version by Andrew Tuline.
 #ifndef ESP8266
-
+  printSetNSettings();
   if (matrixWidth * matrixHeight > SEGLEN) {return blink(CRGB::Red, CRGB::Black, false, false);}    // No, we're not going to overrun the segment.
 
   CRGB *leds = (CRGB *)ledData;
@@ -4822,8 +4936,15 @@ uint16_t WS2812FX::mode_2Ddna(void) {         // dna originally by by ldirko at 
     prevMillis = curMillis;
 
   for(int i = 0; i < matrixHeight; i++) {
-      leds[XY(beatsin8(10, 0, matrixWidth-1, 0, i*4), i)] = ColorFromPalette(currentPalette, i*5+millis()/17, beatsin8(5, 55, 255, 0, i*10), LINEARBLEND);
-      leds[XY(beatsin8(10, 0, matrixWidth-1, 0, i*4+128), i)] = ColorFromPalette(currentPalette,i*5+128+millis()/17, beatsin8(5, 55, 255, 0, i*10+128), LINEARBLEND);        // 180 degrees (128) out of phase
+      if(haanPalettes) {
+        BlandingPallets();
+        leds[XY(beatsin8(10, 0, matrixWidth-1, 0, i*4), i)] = ColorFromPalette(currentPalette1, i*5+millis()/17, beatsin8(5, 55, 255, 0, i*10), LINEARBLEND);
+        leds[XY(beatsin8(10, 0, matrixWidth-1, 0, i*4+128), i)] = ColorFromPalette(currentPalette1,i*5+128+millis()/17, beatsin8(5, 55, 255, 0, i*10+128), LINEARBLEND);        // 180 degrees (128) out of phase 
+      } else {
+        
+        leds[XY(beatsin8(10, 0, matrixWidth-1, 0, i*4), i)] = ColorFromPalette(currentPalette, i*5+millis()/17, beatsin8(5, 55, 255, 0, i*10), LINEARBLEND);
+        leds[XY(beatsin8(10, 0, matrixWidth-1, 0, i*4+128), i)] = ColorFromPalette(currentPalette,i*5+128+millis()/17, beatsin8(5, 55, 255, 0, i*10+128), LINEARBLEND);        // 180 degrees (128) out of phase
+      }
   }
 
   blur2d(leds, matrixWidth, matrixHeight, 2);
@@ -4848,7 +4969,7 @@ uint16_t WS2812FX::mode_2Ddna(void) {         // dna originally by by ldirko at 
 
 uint16_t WS2812FX::mode_2Dmatrix(void) {      // Matrix2D. By Jeremy Williams. Adapted by Andrew Tuline.
 #ifndef ESP8266
-
+  printSetNSettings();
   if (matrixWidth * matrixHeight > SEGLEN) {return blink(CRGB::Red, CRGB::Black, false, false);}    // No, we're not going to overrun the segment.
 
   CRGB *leds = (CRGB* )ledData;
@@ -4927,7 +5048,7 @@ uint16_t WS2812FX::mode_2Dmatrix(void) {      // Matrix2D. By Jeremy Williams. A
 
 uint16_t WS2812FX::mode_2Dmeatballs(void) {   // Metaballs by Stefan Petrick. Cannot have one of the dimensions be 2 or less. Adapted by Andrew Tuline.
 #ifndef ESP8266
-
+  printSetNSettings();
   if (matrixWidth * matrixHeight > SEGLEN) {return blink(CRGB::Red, CRGB::Black, false, false);}    // No, we're not going to overrun the segment.
 
   CRGB *leds = (CRGB* )ledData;

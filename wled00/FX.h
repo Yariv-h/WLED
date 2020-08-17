@@ -29,18 +29,21 @@
 
 #include "NpbWrapper.h"
 #include "const.h"
+#include "palettes.h"
 
 #define FASTLED_INTERNAL //remove annoying pragma messages
 #include "FastLED.h"
 
 #define DEFAULT_BRIGHTNESS (uint8_t)127
-#define DEFAULT_MODE       (uint8_t)0
+#define DEFAULT_MODE       (uint8_t)170
 #define DEFAULT_SPEED      (uint8_t)128
 #define DEFAULT_INTENSITY  (uint8_t)128
 #define DEFAULT_FFT1       (uint8_t)6
 #define DEFAULT_FFT2       (uint8_t)128
 #define DEFAULT_FFT3       (uint8_t)252
 #define DEFAULT_COLOR      (uint32_t)0xFFAA00
+#define DEFAULT_BASE_TIME      (uint32_t)5000
+#define DEFAULT_FADE_TIME      (uint32_t)2000
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))
@@ -72,6 +75,7 @@
 #define SPEED_FORMULA_L  5 + (50*(255 - SEGMENT.speed))/SEGLEN
 #define RESET_RUNTIME    memset(_segment_runtimes, 0, sizeof(_segment_runtimes))
 
+
 // some common colors
 #define RED        (uint32_t)0xFF0000
 #define GREEN      (uint32_t)0x00FF00
@@ -102,7 +106,7 @@
 #define IS_REVERSE      ((SEGMENT.options & REVERSE     ) == REVERSE     )
 #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
-#define MODE_COUNT                     141
+#define MODE_COUNT                     174
 
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
@@ -245,6 +249,41 @@
 #define FX_MODE_2DMATRIX               138
 #define FX_MODE_2DMEATBALLS            139
 #define FX_FFT_TEST                    140
+#define FX_FFT_WALL                    141
+#define FX_FFT_SWIPE                   142
+#define FX_RANDOM_FFT                  143
+#define FX_DANCING_BAR                 144
+#define FX_BLINK                       145
+#define FX_FFT_FIB                     146
+#define FX_HAAN_MIX                    147
+#define FX_HAAN_FADE                   148
+#define FX_HAAN_SET0                   149
+#define FX_HAAN_SET1                   150
+#define FX_HAAN_SET2                   151
+#define FX_HAAN_SET3                   152
+#define FX_HAAN_SET4                   153
+#define FX_HAAN_SET5                   154
+#define FX_HAAN_SET6                   155
+#define FX_HAAN_SET7                   156
+#define FX_HAAN_SET8                   157
+#define FX_HAAN_SET9                   158
+#define FX_HAAN_SET10                  159
+#define FX_HAAN_SET11                  160
+#define FX_HAAN_SET12                  161
+#define FX_HAAN_SET_COLOR1             162
+#define FX_HAAN_SET_COLOR2             163
+#define FX_HAAN_SET_COLOR3             164
+#define FX_HAAN_SET_COLOR5             165
+#define FX_HAAN_SET_COLOR6             166
+#define FX_HAAN_SET_COLOR7             167
+#define FX_HAAN_SET_COLOR8             168
+#define FX_FFT_PUDDLES                 169
+#define FX_MIX_HAAN                    170
+#define FX_MIX_HAAN_COLOR              171
+#define FX_AUTO_HAAN                   172
+#define FX_AUTO_HAAN_INTENCE           173
+
+
 
 
 // Sound reactive external variables
@@ -278,6 +317,9 @@ class WS2812FX {
       uint8_t grouping, spacing;
       uint8_t opacity;
       uint32_t colors[NUM_COLORS];
+      uint8_t fastledColor;
+      uint32_t BASE_TIME;
+      uint32_t FADE_TIME;
       void setOption(uint8_t n, bool val)
       {
         if (val) {
@@ -487,10 +529,51 @@ class WS2812FX {
       _mode[FX_MODE_2DMATRIX]                = &WS2812FX::mode_2Dmatrix;
       _mode[FX_MODE_2DMEATBALLS]             = &WS2812FX::mode_2Dmeatballs;
       _mode[FX_FFT_TEST]                     = &WS2812FX::fft_test;
+      _mode[FX_FFT_WALL]                     = &WS2812FX::mode_fft_wall;
+      _mode[FX_FFT_SWIPE]                    = &WS2812FX::mode_fft_swiping;
+      _mode[FX_RANDOM_FFT]                   = &WS2812FX::mode_random_fft;
+      _mode[FX_DANCING_BAR]                  = &WS2812FX::dancingBar2;
+      _mode[FX_BLINK]                        = &WS2812FX::fft_blink; 
+      _mode[FX_FFT_FIB]                      = &WS2812FX::mode_fft_fib;
+      _mode[FX_HAAN_MIX]                     = &WS2812FX::mode_haan_mix;
+      _mode[FX_HAAN_FADE]                    = &WS2812FX::mode_haan_fade;
+      _mode[FX_HAAN_SET0]                   = &WS2812FX::set0;
+      _mode[FX_HAAN_SET1]                    = &WS2812FX::set1;
+      _mode[FX_HAAN_SET2]                    = &WS2812FX::set2;
+      _mode[FX_HAAN_SET3]                    = &WS2812FX::set3;
+      _mode[FX_HAAN_SET4]                    = &WS2812FX::set4;
+      _mode[FX_HAAN_SET5]                    = &WS2812FX::set5;
+      _mode[FX_HAAN_SET6]                    = &WS2812FX::set6;
+      _mode[FX_HAAN_SET7]                    = &WS2812FX::set7;
+      _mode[FX_HAAN_SET8]                    = &WS2812FX::set8;
+      _mode[FX_HAAN_SET9]                    = &WS2812FX::set9;
+      _mode[FX_HAAN_SET10]                   = &WS2812FX::set10;
+      _mode[FX_HAAN_SET11]                   = &WS2812FX::set11;
+      _mode[FX_HAAN_SET12]                   = &WS2812FX::set12;
+
+      _mode[FX_HAAN_SET_COLOR1]              = &WS2812FX::set1_color;           
+      _mode[FX_HAAN_SET_COLOR2]              = &WS2812FX::set2_color;  
+      _mode[FX_HAAN_SET_COLOR3]              = &WS2812FX::set3_color;  
+      _mode[FX_HAAN_SET_COLOR5]              = &WS2812FX::set5_color;  
+      _mode[FX_HAAN_SET_COLOR6]              = &WS2812FX::set6_color;  
+      _mode[FX_HAAN_SET_COLOR7]              = &WS2812FX::set7_color;  
+      _mode[FX_HAAN_SET_COLOR8]              = &WS2812FX::set8_color;  
+      _mode[FX_FFT_PUDDLES]                  = &WS2812FX::mode_puddles_fft;
+      _mode[FX_MIX_HAAN]                     = &WS2812FX::set_haan_mix;
+      _mode[FX_MIX_HAAN_COLOR]               = &WS2812FX::set_haan_mix_color;
+      _mode[FX_AUTO_HAAN]                    = &WS2812FX::auto_haan;
+      _mode[FX_AUTO_HAAN_INTENCE]            = &WS2812FX::auto_haan_intence;
+
+      
 
       _brightness = DEFAULT_BRIGHTNESS;
+      //SEGMENT.FADE_TIME = DEFAULT_FADE_TIME;
+      //SEGMENT.BASE_TIME = DEFAULT_BASE_TIME;
+
       currentPalette = CRGBPalette16(CRGB::Black);
+      currentPalette1 = CRGBPalette16(CRGB::Black);
       targetPalette = CloudColors_p;
+      targetPalette1 = gGradientPalettes[0];
       ablMilliampsMax = 850;
       currentMilliamps = 0;
       timebase = 0;
@@ -727,8 +810,55 @@ class WS2812FX {
       mode_2Ddna(void),
       mode_2Dmatrix(void),
       mode_2Dmeatballs(void),
-      fft_test(void);
+      mode_fft_wall(void),
+      fft_test(void),
+      mode_random_fft(void),
+      dancingBar2(void),
+      fft_blink(void),
+      mode_fft_fib(void),
+      mode_haan_mix(void),
+      mode_haan_fade(void),
+      set0(void),
+      set1(void),
+      set2(void),
+      set3(void),
+      set4(void),
+      set5(void),
+      set6(void),
+      set7(void),
+      set8(void),
+      set9(void),
+      set10(void),
+      set11(void),
+      set12(void),
+      set1_color(void),
+      set2_color(void),
+      set3_color(void),
+      set5_color(void),
+      set6_color(void),
+      set7_color(void),
+      set8_color(void),
+      mode_puddles_fft(void),
+      set_haan_mix(void),
+      set_haan_mix_color(void),
+      auto_haan(void),
+      auto_haan_intence(void),
+      mode_fft_swiping(void);
 
+      bool shouldAddGlitterPro  = false;
+      bool haanPalettes = false;
+      int CRGBColor=0;
+      void printSetNSettings();
+      void setHaanSettings(int speed, int intensity, uint32_t seg0, uint32_t seg1, uint32_t seg2,  int fftlow, int ffthigh, int fftcustom, int pallet, int palletblanding, int col);
+      void setPallet();
+      void setNSettings(int speed, int intensity, uint32_t seg0, uint32_t seg1, uint32_t seg2, int fftlow, int ffthigh, int fftcustom, int pallet, int palletblanding);
+      void BlandingPallets();
+      void BlandingPalletsFib();
+      bool pixelToSkip(int pixel);
+      void addGlitterPro(fract8 chanceOfGlitter, int color, int sat, int bright);
+      void setColorFromPaletts(int bri, int sat, int i);
+
+     
   private:
     NeoPixelWrapper *bus;
 
@@ -736,6 +866,8 @@ class WS2812FX {
     CRGB col_to_crgb(uint32_t);
     CRGBPalette16 currentPalette;
     CRGBPalette16 targetPalette;
+    CRGBPalette16 currentPalette1;
+    CRGBPalette16 targetPalette1;
 
     uint32_t now;
     uint16_t _length, _lengthRaw, _virtualSegmentLength;
@@ -793,7 +925,7 @@ class WS2812FX {
     uint8_t _segment_index_palette_last = 99;
     segment _segments[MAX_NUM_SEGMENTS] = { // SRAM footprint: 27 bytes per element
       // start, stop, speed, intensity, fft1, fft2, fft3, palette, mode, options, grouping, spacing, opacity (unused), color[]
-      { 0, 7, DEFAULT_SPEED, DEFAULT_INTENSITY, DEFAULT_FFT1, DEFAULT_FFT2, DEFAULT_FFT3, 0, DEFAULT_MODE, NO_OPTIONS, 1, 0, 255, {DEFAULT_COLOR}}
+      { 0, 7, DEFAULT_SPEED, DEFAULT_INTENSITY, DEFAULT_FFT1, DEFAULT_FFT2, DEFAULT_FFT3, 0, DEFAULT_MODE, NO_OPTIONS, 1, 0, 255, {DEFAULT_COLOR},DEFAULT_BASE_TIME,DEFAULT_FADE_TIME}
     };
     segment_runtime _segment_runtimes[MAX_NUM_SEGMENTS]; // SRAM footprint: 28 bytes per element
     friend class Segment_runtime;
@@ -803,21 +935,25 @@ class WS2812FX {
 
 //10 names per line
 const char JSON_mode_names[] PROGMEM = R"=====([
-"Solid","Blink","Breathe","Wipe","Wipe Random","Random Colors","Sweep","Dynamic","Colorloop","Rainbow",
-"Scan","Scan Dual","Fade","Theater","Theater Rainbow","Running","Saw","Twinkle","Dissolve","Dissolve Rnd",
-"Sparkle","Sparkle Dark","Sparkle+","Strobe","Strobe Rainbow","Strobe Mega","Blink Rainbow","Android","Chase","Chase Random",
-"Chase Rainbow","Chase Flash","Chase Flash Rnd","Rainbow Runner","Colorful","Traffic Light","Sweep Random","Running 2","Red & Blue","Stream",
-"Scanner","Lighthouse","Fireworks","Rain","Merry Christmas","Fire Flicker","Gradient","Loading","Police","Police All",
-"Two Dots","Two Areas","Circus","Halloween","Tri Chase","Tri Wipe","Tri Fade","Lightning","ICU","Multi Comet",
-"Scanner Dual","Stream 2","Oscillate","Pride 2015","Juggle","Palette","Fire 2012","Colorwaves","Bpm","Fill Noise",
-"Noise 1","Noise 2","Noise 3","Noise 4","Colortwinkles","Lake","Meteor","Meteor Smooth","Railway","Ripple",
-"Twinklefox","Twinklecat","Halloween Eyes","Solid Pattern","Solid Pattern Tri","Spots","Spots Fade","Glitter","Candle","Fireworks Starburst",
-"Fireworks 1D","Bouncing Balls","Sinelon","Sinelon Dual","Sinelon Rainbow","Popcorn","Drip","Plasma","Percent","Ripple Rainbow",
-"Heartbeat","Pacifica","Candle Multi","Solid Glitter","Sunrise","Flow","Chunchun","Phased","Phased Noise","TwinkleUp",
-"Noise Pal","Sine","* Pixels","* Pixelwave","* Juggles","* Matripix","* Gravimeter","* Plasmoid","* Puddles","* Midnoise",
-"* Noisemeter","** Freqwave","** Freqmatrix","** Spectral","* Waterfall","** Freqpixel","** Binmap","** Noisepeak","* Noisefire","* Puddlepeak",
-"** Noisemove","2D Plasma","Perlin Move","* Ripple Peak","2D FireNoise","2D Squared Swirl","2D Fire2012","2D DNA","2D Matrix","2D Meatballs",
-"** FFT_TEST"
+"Solid","&Blink","Breathe","Wipe","Wipe Random","Random Colors","Sweep","&Dynamic","Colorloop","Rainbow",
+"&Scan","&Scan Dual","Fade","Theater","Theater Rainbow","Running","&Saw","Twinkle","Dissolve","Dissolve Rnd",
+"&Sparkle","&Sparkle Dark","&Sparkle+","Strobe","Strobe Rainbow","Strobe Mega","&Blink Rainbow","&Android","&Chase","&Chase Random",
+"Chase Rainbow","Chase Flash","Chase Flash Rnd","Rainbow Runner","Colorful","Traffic Light","Sweep Random","&Running 2","Red & Blue","Stream",
+"Scanner","Lighthouse","&Fireworks","Rain","Merry Christmas","Fire Flicker","&Gradient","Loading","Police","Police All",
+"&Two Dots","&Two Areas","&Circus","Halloween","Tri Chase","Tri Wipe","Tri Fade","Lightning","ICU","Multi Comet",
+"Scanner Dual","Stream 2","Oscillate","Pride 2015","Juggle","Palette","Fire 2012","&Colorwaves","Bpm","Fill Noise",
+"Noise 1","Noise 2","Noise 3","Noise 4","&Colortwinkles","Lake","Meteor","Meteor Smooth","Railway","&Ripple",
+"Twinklefox","Twinklecat","Halloween Eyes","Solid Pattern","Solid Pattern Tri","Spots","Spots Fade","&Glitter","&Candle","Fireworks Starburst",
+"Fireworks 1D","Bouncing Balls","Sinelon","Sinelon Dual","Sinelon Rainbow","Popcorn","&Drip","&Plasma","Percent","Ripple Rainbow",
+"&Heartbeat","&Pacifica","Candle Multi","&Solid Glitter","Sunrise","&Flow","Chunchun","&Phased","&Phased Noise","TwinkleUp",
+"Noise Pal","Sine","&&&* Pixels","* Pixelwave","&&&* Juggles","* Matripix","* Gravimeter","&&&* Plasmoid","* Puddles","* Midnoise",
+"* Noisemeter","** Freqwave","** Freqmatrix","** Spectral","* Waterfall","&&&** Freqpixel","** Binmap","&&&** Noisepeak","* Noisefire","&&&* Puddlepeak",
+"** Noisemove","&&2D Plasma","Perlin Move","&&&* Ripple Peak","2D FireNoise","&&2D Squared Swirl","2D Fire2012","&&2D DNA","&&2D Matrix","&&2D Meatballs",
+
+"% FFT_TEST","% FFT_WALL", "% FFW_SWIPE", "% FFT_RANDOM", "% FFT_DANCING", "% FFT_BLINK", "!! FFF_FIB", "% FFT_HAAN_MIX", "% HAAN_FADE",
+"%% 0 fib","!!! 1 Blue","!!! 2 Blue","%% 3 Blue","%% 4 Blue","%% 5 Blue","%% 6 Blue","%% 7 Blue","%% 8 Blue","%% 9 Blue","%% 10 Blue","%% 11 Blue","%% 12 Blue",
+"!!! 1 Color","!!! 2 Color","%% 3 Color","%% 5 Color","%% 6 Color","%% 7 Color","%% 8 Color", "% FFT PUDDLES", "!! SET HAAN", "!! SET HAAN COl",
+"! Auto Haan", "!! Auto Haan Hard"
 ])=====";
 
 
@@ -828,7 +964,10 @@ const char JSON_palette_names[] PROGMEM = R"=====([
 "Drywet","Jul","Grintage","Rewhi","Tertiary","Fire","Icefire","Cyane","Light Pink","Autumn",
 "Magenta","Magred","Yelmag","Yelblu","Orange & Teal","Tiamat","April Night","Orangery","C9","Sakura",
 "Aurora","Atlantica","Retro Clown","Candy","Toxy Reaf","Fairy Reaf","Semi Blue","Pink Candy","Red Reaf","Red & Flash",
-"YBlue","Lite Light","Pink Plasma","Blink Red","Yellow 2 Blue","Yellow 2 Red","Candy2"
+"YBlue","Lite Light","Pink Plasma","Blink Red","Yellow 2 Blue","Yellow 2 Red","Candy2","bhw2_27_gp","bhw3_21_gp","bhw2_grrrrr_gp",
+"bhw2_39_gp","bhw2_turq_gp","purplefly_gp","osse_02_gp","osse_23_gp","Pills_2_gp","Pills_3_gp","Pills_1_Reverse_gp","bhw1_32_gp",
+"bhw1_10_gp","bhw1_hello_gp","bhw1_justducky_gp","purplepink_glow_gp","bhw4_062_gp","bhw4_091_gp","bhw4_086_gp","bhw3_24_gp","bhw2_55_gp",
+"bhw2_48_gp","bhw2_10_gp"
 ])=====";
 
 #endif

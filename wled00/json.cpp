@@ -13,6 +13,23 @@ void deserializeSegment(JsonObject elem, byte it)
     uint16_t start = elem["start"] | seg.start;
     int stop = elem["stop"] | -1;
 
+
+    if(!elem["flc"].isNull() && seg.fastledColor != elem["flc"]) {
+      seg.fastledColor = elem["flc"];
+    //  Serial.println(seg.fastledColor);
+    }
+
+    if(!elem["fadeTime"].isNull() && seg.FADE_TIME != elem["fadeTime"]) {
+      
+       seg.FADE_TIME = elem["fadeTime"];
+    }
+
+    if(!elem["effectTime"].isNull() && seg.BASE_TIME != elem["effectTime"]) {
+      //Serial.println("effect tiem changed");
+      seg.BASE_TIME = elem["effectTime"];
+    }
+    
+
     if (stop < 0) {
       uint16_t len = elem["len"];
       stop = (len > 0) ? start + len : seg.stop;
@@ -20,6 +37,7 @@ void deserializeSegment(JsonObject elem, byte it)
     uint16_t grp = elem["grp"] | seg.grouping;
     uint16_t spc = elem["spc"] | seg.spacing;
     strip.setSegment(id, start, stop, grp, spc);
+
 
     int segbri = elem["bri"] | -1;
     if (segbri == 0) {
@@ -62,6 +80,7 @@ void deserializeSegment(JsonObject elem, byte it)
 
     //temporary, strip object gets updated via colorUpdated()
     if (id == strip.getMainSegmentId()) {
+      Serial.println("Main Segid");
       effectCurrent = elem["fx"] | effectCurrent;
       effectSpeed = elem["sx"] | effectSpeed;
       effectIntensity = elem["ix"] | effectIntensity;
@@ -84,6 +103,7 @@ void deserializeSegment(JsonObject elem, byte it)
 
 bool deserializeState(JsonObject root)
 {
+  
   strip.applyToAllSelected = false;
   bool stateResponse = root["v"] | false;
 
@@ -141,6 +161,8 @@ bool deserializeState(JsonObject root)
   strip.mainSegment = root["mainseg"] | prevMain;
   if (strip.getMainSegmentId() != prevMain) setValuesFromMainSeg();
 
+
+
   int it = 0;
   JsonVariant segVar = root["seg"];
   if (segVar.is<JsonObject>())
@@ -167,6 +189,7 @@ bool deserializeState(JsonObject root)
       deserializeSegment(segVar, it);
     }
   } else {
+    
     JsonArray segs = segVar.as<JsonArray>();
     for (JsonObject elem : segs)
     {
@@ -230,6 +253,10 @@ void serializeSegment(JsonObject& root, WS2812FX::Segment& seg, byte id)
 	root["pal"] = seg.palette;
 	root["sel"] = seg.isSelected();
 	root["rev"] = seg.getOption(SEG_OPTION_REVERSED);
+  root["flc"] = seg.fastledColor;
+  root["fadeTime"] = seg.FADE_TIME; 
+  root["effectTime"] = seg.BASE_TIME; 
+
 }
 
 
