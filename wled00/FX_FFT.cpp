@@ -2086,7 +2086,7 @@ uint16_t WS2812FX::set_haan_mix() {
 /***** SET AUTO HAAN *********/
 uint32_t delayTimerSetAutoHAAN = 0;
 int timersModeSetAutoHAAN = 0;
-#define TIMER_MODES_SET_AUTO_HAAN 4 //should be max mode +1
+#define TIMER_MODES_SET_AUTO_HAAN 5 //should be max mode +1
 int modeSetAutoHaan = 0;
 bool firstTimeSettings = true;
 /**********************/
@@ -2116,9 +2116,15 @@ uint16_t WS2812FX::auto_haan() {
       break;  
     
     case 3:
+      delayTimerSetAutoHAAN = SEGMENT.BASE_TIME*2 + SEGMENT.FADE_TIME*3 + 4000;
+      modeSetAutoHaan = FX_AUTO_HAAN_INTENCE_V2;
+      break;  
+
+    case 4:
       delayTimerSetAutoHAAN = SEGMENT.BASE_TIME*52 + SEGMENT.FADE_TIME*22 + 15000 +4000;
       modeSetAutoHaan = FX_AUTO_HAAN_INTENCE;
-      break;  
+      break;
+
     
     default:
       break;
@@ -2138,6 +2144,8 @@ uint16_t WS2812FX::auto_haan() {
     return set_haan_mix_color();  
   case FX_AUTO_HAAN_INTENCE:
     return auto_haan_intence();
+  case FX_AUTO_HAAN_INTENCE_V2:
+    return auto_haan_intence_v2();
   default:
     break;
   }
@@ -2584,6 +2592,107 @@ uint16_t WS2812FX::auto_haan_intence() {
     break;
   }
   
+}
+
+
+/***** SET AUTO HAAN INTENCE*********/
+uint32_t delayTimerSetAutoHAANIntenceV2 = 0;
+int timersModeSetAutoHAANIntenceV2 = 0;
+#define TIMER_MODES_SET_HAAN_INTENCE_V2 9 //should be max mode +1
+int modeSetAutoHaanIntenceV2 = 0;
+/**********************/
+uint16_t WS2812FX::auto_haan_intence_v2() {
+  EVERY_N_MILLISECONDS_I(pixTimerSetAutoHaanIntenceV2, delayTimerSetAutoHAANIntenceV2) { 
+    switch (timersModeSetAutoHAANIntenceV2)
+    {
+    case 0:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.BASE_TIME;
+        modeSetAutoHaanIntenceV2 = MODE_PLASMA;
+        haanPalettes = false;
+        setHaanSettings(  0,  103,  9175295,  0,  0,  255,  255,  255,  0,  0,random16(254));
+      break;
+    case 1:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.FADE_TIME;
+        modeSetAutoHaanIntenceV2 = FX_HAAN_FADE;
+        haanPalettes = false;
+        shouldAddGlitterPro = true;
+        setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,SEGMENT.fastledColor);
+        break;
+    case 2:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.BASE_TIME;
+        modeSetAutoHaanIntenceV2 = MODE_PLASMA;
+        haanPalettes = false;
+        setHaanSettings(  0,  103,  9175295,  0,  0,  255,  255,  255,  0,  0,(SEGMENT.fastledColor+20)%254);
+      break;
+    case 3:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.FADE_TIME;
+        modeSetAutoHaanIntenceV2 = FX_HAAN_FADE;
+        haanPalettes = false;
+        shouldAddGlitterPro = true;
+        setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,SEGMENT.fastledColor);
+        break;
+    case 4:
+        delayTimerSetAutoHAANIntenceV2 = 4000;
+        modeSetAutoHaanIntenceV2 = FX_MODE_HEARTBEAT;
+        haanPalettes = false;
+        setHaanSettings(0,192,16752640, 0, 0,0,0,228,0,0,(SEGMENT.fastledColor+20)%254);
+        break; 
+    case 5:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.FADE_TIME;
+        modeSetAutoHaanIntenceV2 = FX_HAAN_FADE;
+        haanPalettes = false;
+        shouldAddGlitterPro = true;
+        setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,SEGMENT.fastledColor);
+        break;
+    case 6:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.BASE_TIME;
+        modeSetAutoHaanIntenceV2 = MODE_PLASMA;
+        haanPalettes = false;
+        setHaanSettings(  0,  103,  9175295,  0,  0,  255,  255,  255,  0,  0,SEGMENT.fastledColor);
+        break;
+    case 7:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.FADE_TIME;
+        modeSetAutoHaanIntenceV2 = FX_HAAN_FADE;
+        haanPalettes = false;
+        shouldAddGlitterPro = true;
+        setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,SEGMENT.fastledColor);
+        break;
+      case 8:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.BASE_TIME;
+        modeSetAutoHaanIntenceV2 = MODE_PLASMA;
+        haanPalettes = false;
+        setHaanSettings(  0,  103,  9175295,  0,  0,  255,  255,  255,  0,  0,(SEGMENT.fastledColor+5)%254);
+        break;
+    case 9:
+        delayTimerSetAutoHAANIntenceV2 = SEGMENT.FADE_TIME;
+        modeSetAutoHaanIntenceV2 = FX_HAAN_FADE;
+        haanPalettes = false;
+        shouldAddGlitterPro = true;
+        setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,SEGMENT.fastledColor);
+        break;
+    default:
+      break;
+    }
+    setNSettings(haanSpeed, haanIntensity, haanSEG0, haanSEG1, haanSEG2, haanFFTlow, haanFFTHigh, haanFFTCustom, haanPallet, haanBlandingPallet);
+    Serial.print("SetAutoHaanIntenceV2 Mode: ");Serial.print(modeSetAutoHaanIntenceV2); Serial.print(", Timer Mode:");
+    Serial.println(timersModeSetAutoHAANIntenceV2);
+    pixTimerSetAutoHaanIntenceV2.setPeriod(delayTimerSetAutoHAANIntenceV2);
+    timersModeSetAutoHAANIntenceV2++;
+    timersModeSetAutoHAANIntenceV2%=TIMER_MODES_SET_HAAN_INTENCE_V2;
+  }
+
+  switch (modeSetAutoHaanIntenceV2)
+  {
+  case MODE_PLASMA:
+    return mode_plasma();
+  case FX_HAAN_FADE:
+    return mode_haan_fade();
+  case FX_MODE_HEARTBEAT:
+    return mode_heartbeat();
+  
+  default:
+    break;
+  }
 }
 
 

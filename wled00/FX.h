@@ -35,7 +35,7 @@
 #include "FastLED.h"
 
 #define DEFAULT_BRIGHTNESS (uint8_t)127
-#define DEFAULT_MODE       (uint8_t)170
+#define DEFAULT_MODE       (uint8_t)170 //this is not working, should be set at wled.h
 #define DEFAULT_SPEED      (uint8_t)128
 #define DEFAULT_INTENSITY  (uint8_t)128
 #define DEFAULT_FFT1       (uint8_t)6
@@ -106,7 +106,7 @@
 #define IS_REVERSE      ((SEGMENT.options & REVERSE     ) == REVERSE     )
 #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
-#define MODE_COUNT                     174
+#define MODE_COUNT                     175
 
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
@@ -282,6 +282,7 @@
 #define FX_MIX_HAAN_COLOR              171
 #define FX_AUTO_HAAN                   172
 #define FX_AUTO_HAAN_INTENCE           173
+#define FX_AUTO_HAAN_INTENCE_V2        174
 
 
 
@@ -563,6 +564,7 @@ class WS2812FX {
       _mode[FX_MIX_HAAN_COLOR]               = &WS2812FX::set_haan_mix_color;
       _mode[FX_AUTO_HAAN]                    = &WS2812FX::auto_haan;
       _mode[FX_AUTO_HAAN_INTENCE]            = &WS2812FX::auto_haan_intence;
+      _mode[FX_AUTO_HAAN_INTENCE_V2]         = &WS2812FX::auto_haan_intence_v2;
 
       
 
@@ -843,6 +845,7 @@ class WS2812FX {
       set_haan_mix_color(void),
       auto_haan(void),
       auto_haan_intence(void),
+      auto_haan_intence_v2(void),
       mode_fft_swiping(void);
 
       bool shouldAddGlitterPro  = false;
@@ -953,7 +956,7 @@ const char JSON_mode_names[] PROGMEM = R"=====([
 "% FFT_TEST","% FFT_WALL", "% FFW_SWIPE", "% FFT_RANDOM", "% FFT_DANCING", "% FFT_BLINK", "!! FFF_FIB", "% FFT_HAAN_MIX", "% HAAN_FADE",
 "%% 0 fib","!!! 1 Blue","!!! 2 Blue","%% 3 Blue","%% 4 Blue","%% 5 Blue","%% 6 Blue","%% 7 Blue","%% 8 Blue","%% 9 Blue","%% 10 Blue","%% 11 Blue","%% 12 Blue",
 "!!! 1 Color","!!! 2 Color","%% 3 Color","%% 5 Color","%% 6 Color","%% 7 Color","%% 8 Color", "% FFT PUDDLES", "!! SET HAAN", "!! SET HAAN COl",
-"! Auto Haan", "!! Auto Haan Hard"
+"! Auto Haan", "!! Auto Haan Hard","!! Auto Haan Hard2"
 ])=====";
 
 
