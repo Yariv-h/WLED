@@ -191,7 +191,7 @@ WLED_GLOBAL byte bootPreset   _INIT(0);           // save preset to load after p
 
 WLED_GLOBAL byte col[]    _INIT_N(({ 255, 160, 0, 0 }));  // current RGB(W) primary color. col[] should be updated if you want to change the color
 WLED_GLOBAL byte colSec[] _INIT_N(({ 0, 0, 0, 0 }));      // current RGB(W) secondary color
-WLED_GLOBAL byte briS     _INIT(128);                     // default brightness
+WLED_GLOBAL byte briS     _INIT(254);                     // default brightness
 
 WLED_GLOBAL byte soundSquelch _INIT(10);            // default squelch value for volume reactive routines
 WLED_GLOBAL uint16_t noiseFloor _INIT(100);         // default squelch value for FFT reactive routines
@@ -353,7 +353,7 @@ WLED_GLOBAL byte bri _INIT(briS);
 WLED_GLOBAL byte briOld _INIT(0);
 WLED_GLOBAL byte briT _INIT(0);
 WLED_GLOBAL byte briIT _INIT(0);
-WLED_GLOBAL byte briLast _INIT(128);          // brightness before turned off. Used for toggle function
+WLED_GLOBAL byte briLast _INIT(254);          // brightness before turned off. Used for toggle function
 WLED_GLOBAL byte whiteLast _INIT(128);        // white channel before turned off. Used for toggle function
 
 // button

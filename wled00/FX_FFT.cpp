@@ -626,6 +626,8 @@ void WS2812FX::printSetNSettings() {
     Serial.print(SEGMENT.BASE_TIME);
      Serial.print(", FADE_TIME: ");
     Serial.println(SEGMENT.FADE_TIME);
+         Serial.print(", BRIGHTNESS: ");
+    Serial.println(_brightness);
   }
 }
 
@@ -636,7 +638,7 @@ int timersModeSet0 = 0;
 int modeSet0 = 0;
 /**********************/
 uint16_t WS2812FX::set0() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet0, delayTimerSet0) { 
+  EVERY_N_SECONDS_I(pixTimerSet0, delayTimerSet0) { 
       switch (timersModeSet0)
       {
         case 0 :
@@ -688,7 +690,7 @@ uint16_t WS2812FX::set1_color() {
 
 
 uint16_t WS2812FX::set1() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet1, delayTimerSet1) { 
+  EVERY_N_SECONDS_I(pixTimerSet1, delayTimerSet1) { 
       switch (timersModeSet1)
       {
         case 0:
@@ -781,7 +783,7 @@ uint16_t WS2812FX::set2_color() {
   return rate;
 }
 uint16_t WS2812FX::set2() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet2, delayTimerSet2) { 
+  EVERY_N_SECONDS_I(pixTimerSet2, delayTimerSet2) { 
       switch (timersModeSet2)
       {
         case 0:
@@ -842,7 +844,7 @@ uint16_t WS2812FX::set3_color() {
 }
 
 uint16_t WS2812FX::set3() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet3, delayTimerSet3) { 
+  EVERY_N_SECONDS_I(pixTimerSet3, delayTimerSet3) { 
       switch (timersModeSet3)
       {
         case 0:
@@ -941,7 +943,7 @@ int modeSet4 = 0;
 /**********************/
 
 uint16_t WS2812FX::set4() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet4, delayTimerSet4) { 
+  EVERY_N_SECONDS_I(pixTimerSet4, delayTimerSet4) { 
       switch (timersModeSet4)
       {
         case 0:
@@ -992,7 +994,7 @@ uint16_t WS2812FX::set5_color() {
 }
 
 uint16_t WS2812FX::set5() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet5, delayTimerSet5) { 
+  EVERY_N_SECONDS_I(pixTimerSet5, delayTimerSet5) { 
       switch (timersModeSet5)
       {
         case 0:
@@ -1113,7 +1115,7 @@ uint16_t WS2812FX::set6_color() {
 }
 
 uint16_t WS2812FX::set6() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet6, delayTimerSet6) { 
+  EVERY_N_SECONDS_I(pixTimerSet6, delayTimerSet6) { 
       switch (timersModeSet6)
       {
         case 0:
@@ -1163,7 +1165,7 @@ uint16_t WS2812FX::set7_color() {
   return rate;
 }
 uint16_t WS2812FX::set7() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet7, delayTimerSet7) { 
+  EVERY_N_SECONDS_I(pixTimerSet7, delayTimerSet7) { 
       switch (timersModeSet7)
       {
         case 0:
@@ -1214,7 +1216,7 @@ uint16_t WS2812FX::set8_color() {
 }
 
 uint16_t WS2812FX::set8() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet8, delayTimerSet8) { 
+  EVERY_N_SECONDS_I(pixTimerSet8, delayTimerSet8) { 
       switch (timersModeSet8)
       {
         case 0:
@@ -1267,7 +1269,7 @@ int timersModeSet9 = 0;
 int modeSet9 = 0;
 /**********************/
 uint16_t WS2812FX::set9() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet9, delayTimerSet9) { 
+  EVERY_N_SECONDS_I(pixTimerSet9, delayTimerSet9) { 
       switch (timersModeSet9)
       {
         case 0:
@@ -1319,7 +1321,7 @@ int timersModeSet10 = 0;
 int modeSet10 = 0;
 /**********************/
 uint16_t WS2812FX::set10() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet10, delayTimerSet10) { 
+  EVERY_N_SECONDS_I(pixTimerSet10, delayTimerSet10) { 
       switch (timersModeSet10)
       {
         case 0:
@@ -1379,7 +1381,7 @@ int timersModeSet11 = 0;
 int modeSet11 = 0;
 /**********************/
 uint16_t WS2812FX::set11() {
-   EVERY_N_MILLISECONDS_I(pixTimerSet11, delayTimerSet11) { 
+   EVERY_N_SECONDS_I(pixTimerSet11, delayTimerSet11) { 
       switch (timersModeSet11)
       {
         case 0:
@@ -1429,7 +1431,7 @@ int timersModeSet12 = 0;
 int modeSet12 = 0;
 /**********************/
 uint16_t WS2812FX::set12() {
-  EVERY_N_MILLISECONDS_I(pixTimerSet12, delayTimerSet12) { 
+  EVERY_N_SECONDS_I(pixTimerSet12, delayTimerSet12) { 
       switch (timersModeSet12)
       {
         case 0:
@@ -1489,7 +1491,7 @@ uint16_t WS2812FX::set_haan_mix_color() {
 }
 
 uint16_t WS2812FX::set_haan_mix() {
-  EVERY_N_MILLISECONDS_I(pixTimerSetHaanMix, delayTimerSetHAANMix) { 
+  EVERY_N_SECONDS_I(pixTimerSetHaanMix, delayTimerSetHAANMix) { 
     switch (timersModeSetHAANMix)
     {
 
@@ -1567,7 +1569,7 @@ uint16_t WS2812FX::set_haan_mix() {
 
 //SET0
     case 9:
-      delayTimerSetHAANMix = SEGMENT.BASE_TIME*3;
+      delayTimerSetHAANMix = SEGMENT.BASE_TIME*2;
       modeSetHaanMix = FFT_FIB;
       haanPalettes = false;
      break;
@@ -1611,7 +1613,7 @@ uint16_t WS2812FX::set_haan_mix() {
      break;
     
     //SET3
-    case 15:
+    case 15: 
       delayTimerSetHAANMix = SEGMENT.BASE_TIME;
       modeSetHaanMix = MODE_2DPLASMA;
       haanPalettes = false;
@@ -1691,7 +1693,7 @@ uint16_t WS2812FX::set_haan_mix() {
      break;
 
     case 26:
-      delayTimerSetHAANMix = SEGMENT.BASE_TIME;
+      delayTimerSetHAANMix = SEGMENT.FADE_TIME;
       modeSetHaanMix = MODE_HAAN_FADE;
       haanPalettes = false;
       setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,0);
@@ -2098,15 +2100,15 @@ uint16_t WS2812FX::auto_haan() {
     SEGMENT.FADE_TIME = DEFAULT_FADE_TIME;
   }
 
-  EVERY_N_MILLISECONDS_I(pixTimerAutoMix, delayTimerSetAutoHAAN) { 
+  EVERY_N_SECONDS_I(pixTimerAutoMix, delayTimerSetAutoHAAN) { 
     switch (timersModeSetAutoHAAN)
     {
     case 0:
-      delayTimerSetAutoHAAN = SEGMENT.BASE_TIME*44 + SEGMENT.FADE_TIME*23; 
+      delayTimerSetAutoHAAN = SEGMENT.BASE_TIME*43 + SEGMENT.FADE_TIME*23; 
       modeSetAutoHaan = AUTO_HAAN_MIX;
       break;
     case 1:
-      delayTimerSetAutoHAAN = SEGMENT.BASE_TIME*52 + SEGMENT.FADE_TIME*22 + 15000 +4000;
+      delayTimerSetAutoHAAN = SEGMENT.BASE_TIME*48 + SEGMENT.FADE_TIME*22 + 15000 +4000;
       modeSetAutoHaan = FX_AUTO_HAAN_INTENCE;
       break;
 
@@ -2160,7 +2162,7 @@ int timersModeSetAutoHAANIntence = 0;
 int modeSetAutoHaanIntence = 0;
 /**********************/
 uint16_t WS2812FX::auto_haan_intence() {
-   EVERY_N_MILLISECONDS_I(pixTimerAutoIntence, delayTimerSetAutoHAANIntence) { 
+   EVERY_N_SECONDS_I(pixTimerAutoIntence, delayTimerSetAutoHAANIntence) { 
      switch (timersModeSetAutoHAANIntence)
      {
       case 0:
@@ -2332,7 +2334,7 @@ uint16_t WS2812FX::auto_haan_intence() {
           break;
 
       case 26:
-          delayTimerSetAutoHAANIntence = SEGMENT.BASE_TIME*3;
+          delayTimerSetAutoHAANIntence = SEGMENT.BASE_TIME*2;
           modeSetAutoHaanIntence = MODE_2DSQUAREDSWIRL;
           haanPalettes = true;
           setHaanSettings(27, 255, 8913151, 3868159, 16715587, 43, 64, 81,  0, 0 ,32);
@@ -2436,7 +2438,7 @@ uint16_t WS2812FX::auto_haan_intence() {
           break;
 
       case 40:
-          delayTimerSetAutoHAANIntence = SEGMENT.BASE_TIME*5;
+          delayTimerSetAutoHAANIntence = SEGMENT.BASE_TIME*2;
           modeSetAutoHaanIntence = FFT_FIB;
           haanPalettes = false;
           //setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,0);
@@ -2602,7 +2604,7 @@ int timersModeSetAutoHAANIntenceV2 = 0;
 int modeSetAutoHaanIntenceV2 = 0;
 /**********************/
 uint16_t WS2812FX::auto_haan_intence_v2() {
-  EVERY_N_MILLISECONDS_I(pixTimerSetAutoHaanIntenceV2, delayTimerSetAutoHAANIntenceV2) { 
+  EVERY_N_SECONDS_I(pixTimerSetAutoHaanIntenceV2, delayTimerSetAutoHAANIntenceV2) { 
     switch (timersModeSetAutoHAANIntenceV2)
     {
     case 0:
@@ -2707,7 +2709,7 @@ uint16_t WS2812FX::auto_haan_intence_v2() {
 /**********************/
 /*
 uint16_t WS2812FX::set_haan_mix() {
-  EVERY_N_MILLISECONDS_I(pixTimerSetHaanMix, delayTimerSetHAANMix) { 
+  EVERY_N_SECONDS_I(pixTimerSetHaanMix, delayTimerSetHAANMix) { 
     switch (timersModeSetHAANMix)
     {
 
@@ -3220,7 +3222,7 @@ uint16_t WS2812FX::set_haan_mix() {
 
 uint16_t WS2812FX::mode_haan_mix() {
   
-  EVERY_N_MILLISECONDS_I(pixTimer, delayTimer) { 
+  EVERY_N_SECONDS_I(pixTimer, delayTimer) { 
       
       switch (timersMode)
       {

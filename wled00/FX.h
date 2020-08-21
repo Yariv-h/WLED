@@ -42,8 +42,8 @@
 #define DEFAULT_FFT2       (uint8_t)128
 #define DEFAULT_FFT3       (uint8_t)252
 #define DEFAULT_COLOR      (uint32_t)0xFFAA00
-#define DEFAULT_BASE_TIME      (uint32_t)5000
-#define DEFAULT_FADE_TIME      (uint32_t)2000
+#define DEFAULT_BASE_TIME      (uint32_t)90
+#define DEFAULT_FADE_TIME      (uint32_t)5
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))
