@@ -1624,7 +1624,6 @@ uint16_t WS2812FX::set_haan_mix() {
       delayTimerSetHAANMix = SEGMENT.BASE_TIME;
       modeSetHaanMix = MODE_JUGGLE;
       haanPalettes = false;
-      //setHaanSettings(18,255,13107455,0, 0, 255,  255,  42, 0, 0, 0);
       setHaanSettings(18,255,16711931,0, 0, 255,  255,  42, 0, 0, 0);
      break;
 
@@ -2259,7 +2258,7 @@ uint16_t WS2812FX::auto_haan_intence() {
           // setHaanSettings(0,192,0, 0, 0,0,0,228,0,0,0);
           break;
       case 15:
-          delayTimerSetAutoHAANIntence = 15000;
+          delayTimerSetAutoHAANIntence = 15;
           modeSetAutoHaanIntence = MODE_DRIP;
           haanPalettes = false;
           setHaanSettings(128, 255, 16750600,0,  0, 255, 255,  9,  13,  33, 0); //Verify its working
@@ -3391,7 +3390,7 @@ uint16_t WS2812FX::mode_haan_mix() {
           break;
 
         case 27:
-          delayTimer = SEGMENT.BASE_TIME;
+          delayTimer = 15;
           mode = MODE_DRIP;
           break;
 
