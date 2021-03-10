@@ -118,6 +118,7 @@
 #include "html_settings.h"
 #include "html_other.h"
 #include "FX.h"
+#include "FX_Party.h"
 #include "ir_codes.h"
 #include "const.h"
 

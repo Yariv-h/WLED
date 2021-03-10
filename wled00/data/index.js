@@ -222,6 +222,8 @@ function openTab(tabI, force = false) {
 	iSlide = tabI;
 	_C.classList.toggle('smooth', false);
 	_C.style.setProperty('--i', iSlide);
+	console.log("yariv")
+	console.log(iSlide)
 	updateTablinks(tabI);
 }
 
@@ -642,6 +644,8 @@ function updatePA()
 
 function updateUI()
 {
+	console.log("yariv3")
+	console.log(selectedFx)
 	d.getElementById('buttonPower').className = (isOn) ? "active":"";
 	d.getElementById('buttonNl').className = (nlA) ? "active":"";
 	d.getElementById('buttonSync').className = (syncSend) ? "active":"";
@@ -688,6 +692,7 @@ function requestJson(command, rinfo = true, verbose = true) {
 	var req = null;
 	var e1 = d.getElementById('fxlist');
 	var e2 = d.getElementById('selectPalette');
+	var e3 = d.getElementById('fxlistParty');
 
 	var url = rinfo ? '/json/si': (command ? '/json/state':'/json');
 	if (loc) {
@@ -733,22 +738,35 @@ function requestJson(command, rinfo = true, verbose = true) {
     else populatePresets(true);
     pmtLast = pmt;
 		var x='',y='<option value="0">Default</option>';
+		var partyModesList='';
 		json.effects.shift(); //remove solid
 		for (let i = 0; i < json.effects.length; i++) json.effects[i] = {id: parseInt(i)+1, name:json.effects[i]};
 		json.effects.sort(compare);
 		for (let i = 0; i < json.effects.length; i++) {
 		x += `<button class="btn${(i==0)?" first":""}" id="fxb${json.effects[i].id}" onclick="setX(${json.effects[i].id});">${json.effects[i].name}</button><br>`;
 		}
+		
+		//Party mode list
+		json.party.shift(); //remove solid
+		for (let i = 0; i < json.party.length; i++) json.party[i] = {id: parseInt(i)+1, name:json.party[i]};
+		json.party.sort(compare);
+		for (let i = 0; i < json.party.length; i++) {
+			partyModesList += `<button class="btn${(i==0)?" first":""}" id="fxb${json.party[i].id}" onclick="setX(${json.party[i].id});">${json.party[i].name}</button><br>`;
+		}
 
+		
 		json.palettes.shift(); //remove default
 		for (let i = 0; i < json.palettes.length; i++) json.palettes[i] = {"id": parseInt(i)+1, "name":json.palettes[i]};
 		json.palettes.sort(compare);
 		for (let i = 0; i < json.palettes.length; i++) {
 		y += `<option value="${json.palettes[i].id}">${json.palettes[i].name}</option>`;
 		}
-		e1.innerHTML=x; e2.innerHTML=y;
-		}
+		e1.innerHTML=x; 
+		e2.innerHTML=y;
+		e3.innerHTML=partyModesList;
 
+		}
+		
 			var info = json.info;
 			var name = info.name;
 			d.getElementById('namelabel').innerHTML = name;
@@ -812,7 +830,11 @@ function requestJson(command, rinfo = true, verbose = true) {
 		d.getElementById('fxb' + selectedFx).style.backgroundColor = "var(--c-3)";
 		selectedFx = i.fx;
 		e2.value = i.pal;
-		if (!command) d.getElementById('Effects').scrollTop = d.getElementById('fxb' + selectedFx).offsetTop - d.getElementById('Effects').clientHeight/1.8;
+		if (!command) {
+			console.log("yariv2")
+			d.getElementById('Effects').scrollTop = d.getElementById('fxb' + selectedFx).offsetTop - d.getElementById('Effects').clientHeight/1.8;
+			d.getElementById('Party').scrollTop = d.getElementById('fxb' + selectedFx).offsetTop - d.getElementById('Party').clientHeight/1.8;
+		}
 
 		if (s.error && s.error != 0) {
       var errstr = "";
@@ -1328,7 +1350,7 @@ function unfocusSliders() {
 }
 
 //sliding UI
-const _C = document.querySelector('.container'), N = 4;
+const _C = document.querySelector('.container'), N = 5;
 
 let iSlide = 0, x0 = null, scrollS = 0, locked = false, w;
 

@@ -185,13 +185,71 @@
 		Time per preset: <input id="cyct" class="noslide" type="number" min="0.2" max="6553.5" step="0.1" value="1.2">s<br>
 		Transition: <input id="cyctt" class="noslide" type="number" min="0" max="65.5" step="0.1" value="0.7">s
 	</div>
+	<div id="Party" class="tabcontent">
+		<p class="labels">Effect speed</p>
+		<div class="staytop">
+		  <i class="icons slider-icon">&#xe325;</i>
+		  <div class="sliderwrap il">
+					<input id="sliderSpeed" class="noslide" onchange="setSpeed()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
+					<output class="sliderbubble hidden"></output>
+			<div class="sliderdisplay"></div>
+		  </div>
+		</div>
+		<p class="labels">Effect intensity</p>
+		<div class="staytop" id="staytop1">
+		  <i class="icons slider-icon" onclick="tglLabels()">&#xe409;</i>
+		  <div class="sliderwrap il">
+					<input id="sliderIntensity" class="noslide" onchange="setIntensity()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
+					<output class="sliderbubble hidden"></output>
+			<div class="sliderdisplay"></div>
+		  </div>
+		</div>
+		<p class="labels">FFT Low</p>
+		<div class="staytop" id="staytop2">
+		  <i class="icons slider-icon">&#xe409;</i>
+		  <div class="sliderwrap il">
+					<input id="sliderFFT1" class="noslide" onchange="setFFT1()" oninput="updateTrail(this)" max="255" min="0" type="range" value="6" />
+					<output class="sliderbubble hidden"></output>
+			<div class="sliderdisplay"></div>
+		  </div>
+		</div>
+		<p class="labels">FFT High</p>
+		<div class="staytop" id="staytop3">
+		  <i class="icons slider-icon">&#xe409;</i>
+		  <div class="sliderwrap il">
+					<input id="sliderFFT2" class="noslide" onchange="setFFT2()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
+					<output class="sliderbubble hidden"></output>
+			<div class="sliderdisplay"></div>
+		  </div>
+		</div>
+		<p class="labels">FFT Custom</p>
+		<div class="staytop" id="staytop4">
+		  <i class="icons slider-icon">&#xe409;</i>
+		  <div class="sliderwrap il">
+					<input id="sliderFFT3" class="noslide" onchange="setFFT3()" oninput="updateTrail(this)" max="255" min="0" type="range" value="252" />
+					<output class="sliderbubble hidden"></output>
+			<div class="sliderdisplay"></div>
+		  </div>
+		</div>
+		<p class="labels">Effect mode</p>
+		<div class="staytop" id="staytop5">
+		  <button class="btn" id="fxb0" onclick="setX(0);">Solid</button>
+		</div>
+		<div id="fxlistParty">
+		  Loading...
+		</div>
+		<br>
+	  </div>
 </div>
+
+
 
 <div class="tab bot" id="bot">
 	<button class="tablinks" onclick="openTab(0)"><i class="icons">&#xe2b3;</i><p class="tab-label">Colors</p></button>
 	<button class="tablinks" onclick="openTab(1)"><i class="icons">&#xe23d;</i><p class="tab-label">Effects</p></button>
 	<button class="tablinks" onclick="openTab(2)"><i class="icons">&#xe34b;</i><p class="tab-label">Segments</p></button>
 	<button class="tablinks" onclick="openTab(3)"><i class="icons">&#xe04c;</i><p class="tab-label">Favorites</p></button>
+	<button class="tablinks" onclick="openTab(4)"><i class="icons">&#xe04c;</i><p class="tab-label">Party</p></button>
 </div>
 
 <div id="connind"></div>
