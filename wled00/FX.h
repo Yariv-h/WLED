@@ -307,6 +307,7 @@ class WS2812FX {
       uint8_t fft3;
       uint8_t palette;
       uint8_t mode;
+      uint8_t modeType; // 0 - effects, 1 - party
       uint8_t options; //bit pattern: msb first: transitional needspixelstate tbd tbd (paused) on reverse selected
       uint8_t grouping, spacing;
       uint8_t opacity;
@@ -679,7 +680,7 @@ class WS2812FX {
       fill(uint32_t),
       fade_out(uint8_t r),
       fade2black(uint8_t r),
-      setMode(uint8_t segid, uint8_t m),
+      setMode(uint8_t segid, uint8_t m, uint8_t modeType),
       setColor(uint8_t slot, uint8_t r, uint8_t g, uint8_t b, uint8_t w = 0),
       setColor(uint8_t slot, uint32_t c),
       setBrightness(uint8_t b),
@@ -711,7 +712,7 @@ class WS2812FX {
       gammaCorrectCol = true,
       applyToAllSelected = true,
       segmentsAreIdentical(Segment* a, Segment* b),
-      setEffectConfig(uint8_t m, uint8_t s, uint8_t i, uint8_t f1, uint8_t f2, uint8_t f3, uint8_t p),
+      setEffectConfig(uint8_t modeType, uint8_t m, uint8_t s, uint8_t i, uint8_t f1, uint8_t f2, uint8_t f3, uint8_t p),
       // return true if the strip is being sent pixel updates
       isUpdating(void);
     uint8_t

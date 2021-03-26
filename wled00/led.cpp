@@ -103,7 +103,9 @@ void colorUpdated(int callMode)
   //Notifier: apply received FX to selected segments only if actually receiving FX
   if (someSel) strip.applyToAllSelected = receiveNotificationEffects;
 
-  bool fxChanged = strip.setEffectConfig(effectCurrent, effectSpeed, effectIntensity, effectFFT1, effectFFT2, effectFFT3, effectPalette);
+  Serial.println("Yariv color update");
+  Serial.println(effectModeType);
+  bool fxChanged = strip.setEffectConfig(effectModeType, effectCurrent, effectSpeed, effectIntensity, effectFFT1, effectFFT2, effectFFT3, effectPalette);
   bool colChanged = colorChanged();
 
   //Notifier: apply received color to selected segments only if actually receiving color
@@ -243,7 +245,7 @@ void handleNightlight()
         colNlT[1] = effectSpeed;
         colNlT[2] = effectPalette;
 
-        strip.setMode(strip.getMainSegmentId(), FX_MODE_STATIC); //make sure seg runtime is reset if left in sunrise mode
+        strip.setMode(strip.getMainSegmentId(), FX_MODE_STATIC, effectModeType); //make sure seg runtime is reset if left in sunrise mode
         effectCurrent = FX_MODE_SUNRISE;
         effectSpeed = nightlightDelayMins;
         effectPalette = 0;

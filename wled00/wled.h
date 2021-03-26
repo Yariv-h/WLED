@@ -402,6 +402,7 @@ WLED_GLOBAL byte notificationSentCallMode _INIT(NOTIFIER_CALL_MODE_INIT);
 WLED_GLOBAL bool notificationTwoRequired _INIT(false);
 
 // effects
+WLED_GLOBAL byte effectModeType _INIT(0); //0 - for effects, 1 - for party 
 WLED_GLOBAL byte effectCurrent _INIT(0);
 WLED_GLOBAL byte effectSpeed _INIT(128);
 WLED_GLOBAL byte effectIntensity _INIT(128);

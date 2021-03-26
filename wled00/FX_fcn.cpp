@@ -25,6 +25,7 @@
 */
 
 #include "FX.h"
+#include "FX_Party.h"
 #include "palettes.h"
 
 #ifndef PWM_INDEX
@@ -106,7 +107,25 @@ void WS2812FX::service() {
         }
         for (uint8_t c = 0; c < 3; c++) _colors_t[c] = gamma32(_colors_t[c]);
         handle_palette();
-        delay = (this->*_mode[SEGMENT.mode])(); //effect function
+        //Serial.println("Yariv here we get the effect from the array");
+        switch (SEGMENT.modeType)
+        {
+        case 0: //effect mode
+          //Serial.println("Effect mode");
+          delay = (this->*_mode[SEGMENT.mode])(); //effect function
+          break;
+        case 1: //party mode
+        //Serial.println("Party mode");
+          //delay = (this->*)
+          //delay = (this->*WS2812FXParty::_modeParty[SEGMENT.mode])();
+          //WS2812FXParty a;
+          break;
+        
+        default:
+          break;
+        }
+
+        //delay = (this->*_mode[SEGMENT.mode])(); //effect function
         if (SEGMENT.mode != FX_MODE_HALLOWEEN_EYES) SEGENV.call++;
       }
 
@@ -325,7 +344,7 @@ void WS2812FX::trigger() {
   _triggered = true;
 }
 
-void WS2812FX::setMode(uint8_t segid, uint8_t m) {
+void WS2812FX::setMode(uint8_t segid, uint8_t m, uint8_t modeType) {
   if (segid >= MAX_NUM_SEGMENTS) return;
 
   if (m >= MODE_COUNT) m = MODE_COUNT - 1;
@@ -334,6 +353,9 @@ void WS2812FX::setMode(uint8_t segid, uint8_t m) {
   {
     _segment_runtimes[segid].reset();
     _segments[segid].mode = m;
+    _segments[segid].modeType = modeType;
+    Serial.print("Yariv setting segment mode part2: modetype: ");
+    Serial.println(modeType);
   }
 }
 
@@ -349,8 +371,8 @@ uint8_t WS2812FX::getPaletteCount()
 
 //TODO effect transitions
 
-bool WS2812FX::setEffectConfig(uint8_t m, uint8_t s, uint8_t in, uint8_t f1, uint8_t f2, uint8_t f3, uint8_t p) {
-
+bool WS2812FX::setEffectConfig(uint8_t modeType, uint8_t m, uint8_t s, uint8_t in, uint8_t f1, uint8_t f2, uint8_t f3, uint8_t p) {
+  Serial.println("Yariv setEffectConfig");
   uint8_t mainSeg = getMainSegmentId();
   Segment& seg = _segments[getMainSegmentId()];
   uint8_t modePrev = seg.mode, speedPrev = seg.speed, intensityPrev = seg.intensity, fft1Prev = seg.fft1, fft2Prev = seg.fft2, fft3Prev = seg.fft3, palettePrev = seg.palette;
@@ -368,7 +390,7 @@ bool WS2812FX::setEffectConfig(uint8_t m, uint8_t s, uint8_t in, uint8_t f1, uin
         _segments[i].fft2 = f2;
         _segments[i].fft3 = f3;
         _segments[i].palette = p;
-        setMode(i, m);
+        setMode(i, m, modeType);
         applied = true;
       }
     }
@@ -381,7 +403,8 @@ bool WS2812FX::setEffectConfig(uint8_t m, uint8_t s, uint8_t in, uint8_t f1, uin
     seg.fft2 = f2;
     seg.fft3 = f3;
     seg.palette = p;
-    setMode(mainSegment, m);
+    Serial.println("Yariv setting segment mode part 1");
+    setMode(mainSegment, m, modeType);
   }
 
   if (seg.mode != modePrev || seg.speed != speedPrev || seg.intensity != intensityPrev || seg.fft1 != fft1Prev || seg.fft2 != fft2Prev || seg.fft3 != fft3Prev || seg.palette != palettePrev) return true;

@@ -38,8 +38,8 @@
 #include "const.h"
 
 // #define FASTLED_INTERNAL //remove annoying pragma messages
-// #define USE_GET_MILLISECOND_TIMER
-// #include "FastLED.h"
+//#define USE_GET_MILLISECOND_TIMER
+#include "FastLED.h"
 
 // #define DEFAULT_BRIGHTNESS (uint8_t)127
 // #define DEFAULT_MODE       (uint8_t)0
@@ -123,9 +123,10 @@
 // #define IS_REVERSE      ((SEGMENT.options & REVERSE     ) == REVERSE     )
 // #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
-// #define MODE_COUNT                     152
+ #define PARTY_MODE_COUNT                     2
 
-// #define FX_MODE_STATIC                   0
+ #define FX_PARTY_MODE_STATIC               1
+  #define FX_PARTY_MODE_STATIC2              2
 // #define FX_MODE_BLINK                    1
 // #define FX_MODE_BREATH                   2
 // #define FX_MODE_COLOR_WIPE               3
@@ -287,7 +288,18 @@
 // extern int sampleAgc;
 // extern uint8_t squelch;
 
-// class WS2812FX {
+ class WS2812FXParty {
+   typedef uint16_t (WS2812FXParty::*mode_ptr)(void);
+   mode_ptr _modeParty[PARTY_MODE_COUNT]; // SRAM footprint: 4 bytes per element
+   uint16_t
+       party_mode_static(void);
+
+   WS2812FXParty() {
+     _modeParty[FX_PARTY_MODE_STATIC] = &WS2812FXParty::party_mode_static;
+     _modeParty[FX_PARTY_MODE_STATIC2] = &WS2812FXParty::party_mode_static;
+   }
+   
+ };
 //   typedef uint16_t (WS2812FX::*mode_ptr)(void);
 
 //   // pre show callback
@@ -949,7 +961,7 @@
 //       _skipFirstMode,
 //       _triggered;
 
-//     mode_ptr _mode[MODE_COUNT]; // SRAM footprint: 4 bytes per element
+     //mode_ptr _modeParty[MODE_COUNT]; // SRAM footprint: 4 bytes per element
 
 //     show_callback _callback = nullptr;
 

@@ -92,7 +92,20 @@ void deserializeSegment(JsonObject elem, byte it)
 
     //temporary, strip object gets updated via colorUpdated()
     if (id == strip.getMainSegmentId()) {
+      Serial.println("yariv1");
+      
+      int modeType = elem[F("fx")] | -1;
+      if(modeType >= 0) {
+         effectModeType = 0; 
+      }
+      modeType = elem[F("fxParty")] | -1;
+      if(modeType >= 0) {
+        effectModeType = 1;
+      }
+
       effectCurrent = elem[F("fx")] | effectCurrent;
+      effectCurrent = elem[F("fxParty")] | effectCurrent; // Yariv - should change the counting for the party mode - both FX & party gets numbers from 1-X
+      
       effectSpeed = elem[F("sx")] | effectSpeed;
       effectIntensity = elem[F("ix")] | effectIntensity;
       effectFFT1 = elem[F("f1x")] | effectFFT1;
@@ -100,8 +113,9 @@ void deserializeSegment(JsonObject elem, byte it)
       effectFFT3 = elem[F("f3x")] | effectFFT3;
       effectPalette = elem[F("pal")] | effectPalette;
     } else { //permanent
+      Serial.println("yariv2"); 
       byte fx = elem[F("fx")] | seg.mode;
-      if (fx != seg.mode && fx < strip.getModeCount()) strip.setMode(id, fx);
+      if (fx != seg.mode && fx < strip.getModeCount()) strip.setMode(id, fx, effectModeType);
       seg.speed = elem[F("sx")] | seg.speed;
       seg.intensity = elem[F("ix")] | seg.intensity;
       seg.fft1 = elem[F("f1x")] | seg.fft1;
@@ -161,6 +175,8 @@ void deserializeSegment(JsonObject elem, byte it)
 
 bool deserializeState(JsonObject root)
 {
+  //Yariv - print json request
+  
   strip.applyToAllSelected = false;
   bool stateResponse = root[F("v")] | false;
 

@@ -751,7 +751,7 @@ function requestJson(command, rinfo = true, verbose = true) {
 		for (let i = 0; i < json.party.length; i++) json.party[i] = {id: parseInt(i)+1, name:json.party[i]};
 		json.party.sort(compare);
 		for (let i = 0; i < json.party.length; i++) {
-			partyModesList += `<button class="btn${(i==0)?" first":""}" id="fxb${json.party[i].id}" onclick="setX(${json.party[i].id});">${json.party[i].name}</button><br>`;
+			partyModesList += `<button class="btn${(i==0)?" first":""}" id="fxbParty${json.party[i].id}" onclick="setPartyMode(${json.party[i].id});">${json.party[i].name}</button><br>`;
 		}
 
 		
@@ -1059,6 +1059,11 @@ function setSegBri(s){
 
 function setX(ind) {
 	var obj = {"seg": {"fx": parseInt(ind)}};
+	requestJson(obj);
+}
+
+function setPartyMode(ind) {
+	var obj = {"seg": {"fxParty": parseInt(ind)}};
 	requestJson(obj);
 }
 

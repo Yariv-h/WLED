@@ -784,6 +784,7 @@ bool handleSet(AsyncWebServerRequest *request, const String& req, bool apply)
   {
     WS2812FX::Segment& seg = strip.getSegment(i);
     if (!seg.isSelected()) continue;
+    Serial.println("Yariv - set seg.mode effect");
     if (effectCurrent != prevEffect) seg.mode = effectCurrent;
     if (effectSpeed != prevSpeed) seg.speed = effectSpeed;
     if (effectIntensity != prevIntensity) seg.intensity = effectIntensity;
