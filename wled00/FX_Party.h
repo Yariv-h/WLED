@@ -123,10 +123,10 @@
 // #define IS_REVERSE      ((SEGMENT.options & REVERSE     ) == REVERSE     )
 // #define IS_SELECTED     ((SEGMENT.options & SELECTED    ) == SELECTED    )
 
- #define PARTY_MODE_COUNT                     2
+ //#define PARTY_MODE_COUNT                     2
 
- #define FX_PARTY_MODE_STATIC               1
-  #define FX_PARTY_MODE_STATIC2              2
+ //#define FX_PARTY_MODE_STATIC               1
+ // #define FX_PARTY_MODE_STATIC2              2
 // #define FX_MODE_BLINK                    1
 // #define FX_MODE_BREATH                   2
 // #define FX_MODE_COLOR_WIPE               3

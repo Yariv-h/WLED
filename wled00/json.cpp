@@ -602,7 +602,7 @@ void serveJson(AsyncWebServerRequest* request)
       {
         doc[F("effects")]  = serialized((const __FlashStringHelper*)JSON_mode_names);
         doc[F("palettes")] = serialized((const __FlashStringHelper*)JSON_palette_names);
-        doc[F("party")] = serialized((const __FlashStringHelper*)JSON_party_mode_names);
+        doc[F("party")] = serialized((const __FlashStringHelper*)JSON_party_mode_names2);
       }
   }
 

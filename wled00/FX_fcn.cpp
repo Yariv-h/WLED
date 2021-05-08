@@ -107,7 +107,8 @@ void WS2812FX::service() {
         }
         for (uint8_t c = 0; c < 3; c++) _colors_t[c] = gamma32(_colors_t[c]);
         handle_palette();
-        //Serial.println("Yariv here we get the effect from the array");
+        
+        
         switch (SEGMENT.modeType)
         {
         case 0: //effect mode
@@ -115,9 +116,10 @@ void WS2812FX::service() {
           delay = (this->*_mode[SEGMENT.mode])(); //effect function
           break;
         case 1: //party mode
-        //Serial.println("Party mode");
+          Serial.print("Party mode - segemnt mode: ");
+          Serial.print(SEGMENT.mode);
           //delay = (this->*)
-          //delay = (this->*WS2812FXParty::_modeParty[SEGMENT.mode])();
+          delay = (this->*_modeParty[SEGMENT.mode])();
           //WS2812FXParty a;
           break;
         

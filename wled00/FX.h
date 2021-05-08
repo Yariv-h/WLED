@@ -279,6 +279,11 @@
 #define FX_MODE_2DCENTERBARS           151
 
 
+#define PARTY_MODE_COUNT                   3 // Should be total +1
+
+#define FX_PARTY_MODE_STATIC               1
+#define FX_PARTY_MODE_STATIC2              2
+
 // Sound reactive external variables
 extern int sample;
 extern float sampleAvg;
@@ -663,6 +668,11 @@ class WS2812FX {
       _mode[FX_MODE_2DFUNKYPLANK]            = &WS2812FX::mode_2DFunkyPlank;
       _mode[FX_MODE_2DCENTERBARS]            = &WS2812FX::mode_2DCenterBars;
 
+
+      _modeParty[FX_PARTY_MODE_STATIC]       = &WS2812FX::party_mode_static;
+      _modeParty[FX_PARTY_MODE_STATIC2]      = &WS2812FX::party_mode_static2;
+      
+
       _brightness = DEFAULT_BRIGHTNESS;
       currentPalette = CRGBPalette16(CRGB::Black);
       targetPalette = CloudColors_p;
@@ -927,6 +937,10 @@ class WS2812FX {
       mode_2DFunkyPlank(void),
       mode_2DCenterBars(void);
 
+      //Party Mode
+      uint16_t party_mode_static(void)
+      ,party_mode_static2(void);
+
   private:
     NeoPixelWrapper *bus;
 
@@ -951,6 +965,7 @@ class WS2812FX {
       _triggered;
 
     mode_ptr _mode[MODE_COUNT]; // SRAM footprint: 4 bytes per element
+    mode_ptr _modeParty[PARTY_MODE_COUNT]; // SRAM footprint: 4 bytes per element
 
     show_callback _callback = nullptr;
 
@@ -1046,6 +1061,16 @@ const char JSON_palette_names[] PROGMEM = R"=====([
 "Aurora","Atlantica","C9 2","C9 New","Temperature","Aurora 2","Retro Clown","Candy","Toxy Reaf","Fairy Reaf",
 "Semi Blue","Pink Candy","Red Reaf","Red & Flash","YBlue","Lite Light","Pink Plasma","Blink Red","Yellow 2 Blue","Yellow 2 Red",
 "Candy2"
+])=====";
+
+
+const char JSON_party_mode_names2[] PROGMEM = R"=====([
+"Solid","TEST1","TEST2","TEST3"
+])=====";
+
+
+const char JSON_party_palette_names2[] PROGMEM = R"=====([
+"Default","Test1","TEST2"
 ])=====";
 
 #endif
